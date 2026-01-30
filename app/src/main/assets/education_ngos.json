@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "name": "Educational NGO",
+    "info": "",
+    "imagelink": "education",
+    "companyId": ""
+  },
+  {
+    "id": "2",
+    "name": "Educational NGO",
+    "info": "Educational NGO provides best resources for education",
+    "imagelink": "education",
+    "companyId": ""
+  },
+  {
+    "id": "3",
+    "name": "Educational NGO",
+    "info": "Educational NGO provides best resources for education",
+    "imagelink": "education",
+    "companyId": ""
+  },
+  {
+    "id": "4",
+    "name": "Educational NGO",
+    "info": "Educational NGO provides best resources for education",
+    "imagelink": "education",
+    "companyId": ""
+  }
+]

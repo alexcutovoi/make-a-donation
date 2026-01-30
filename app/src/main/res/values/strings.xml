@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Make a Donation</string>
+    <string name="donate">Doar</string>
+    <string name="donate_label">Valor a doar:</string>
+    <string name="ngo_name">Instituição Ambiental</string>
+    <string name="ngo_description">Instituição Ambiental é responsável por cuidar de 100 árvores no cerrado e contribui para que o meio ambiente seja preservado</string>
+    <string name="return_host">returnhost</string>
+    <string name="return_schema">returnschema</string>
+</resources>

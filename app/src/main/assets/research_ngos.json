@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "name": "ong",
+    "info": "",
+    "imagelink": "research",
+    "companyId": ""
+  },
+  {
+    "id": "2",
+    "name": "Research NGO",
+    "info": "Research NGO collaborates with doctor to find cure for many diseases",
+    "imagelink": "research",
+    "companyId": ""
+  },
+  {
+    "id": "3",
+    "name": "Research NGO",
+    "info": "Research NGO collaborates with doctor to find cure for many diseases",
+    "imagelink": "research",
+    "companyId": ""
+  },
+  {
+    "id": "4",
+    "name": "Research NGO",
+    "info": "Research NGO collaborates with doctor to find cure for many diseases",
+    "imagelink": "research",
+    "companyId": ""
+  }
+]

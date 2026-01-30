@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/ngoCategoriesFragment">
+    <fragment
+        android:id="@+id/ngoCategoriesFragment"
+        android:name="com.app.makeadonation.ngocategories.presentation.NGOCategoriesFragment"
+        android:label="Categories">
+
+        <action
+            android:id="@+id/action_ngo_institutions"
+            app:destination="@id/ngoInstitutionsFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/ngoInstitutionsFragment"
+        android:name="com.app.makeadonation.ngoinstitutions.presentation.NGOInstitutionsFragment"
+        android:label="Institutions">
+
+        <argument
+            android:name="ngoCategoryId"
+            app:argType="integer" />
+
+    </fragment>
+</navigation>
