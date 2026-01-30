@@ -1,6 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.androidx.navigation.safeargs)
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { stream ->
+        localProperties.load(stream)
+    }
 }
 
 android {
@@ -18,8 +28,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "CREDENTIALS_CLIENT_ID", "\"credencial cliente\"")
-        buildConfigField("String", "CREDENTIALS_ACCESS_TOKEN", "\"token cliente\"")
+        buildConfigField("String", "CREDENTIALS_CLIENT_ID", "\"${localProperties.getProperty("CLIENT_ID", "")}\"")
+        buildConfigField("String", "CREDENTIALS_ACCESS_TOKEN", "\"${localProperties.getProperty("ACCESS_TOKEN", "")}\"")
     }
 
     buildTypes {
