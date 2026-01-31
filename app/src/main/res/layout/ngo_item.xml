@@ -14,7 +14,6 @@
         android:orientation="vertical"
         android:padding="@dimen/material_spacing_medium">
 
-        <!-- Collapsed header -->
         <LinearLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
@@ -46,10 +45,21 @@
                 android:contentDescription="@null"/>
 
         </LinearLayout>
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_spacing_medium"
+            android:visibility="gone"/>
 
-        <include
-            android:id="@+id/ngo_item_additional_info"
-            layout="@layout/ngo_item_info"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/donate_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_spacing_medium"
+            android:text="@string/donate"
+            android:enabled="false"
+            style="@style/PrimaryButton"
             android:visibility="gone"/>
 
     </LinearLayout>

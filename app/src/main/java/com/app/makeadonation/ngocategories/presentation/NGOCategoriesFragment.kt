@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.BaseFragment
 import com.app.makeadonation.common.observe
@@ -23,6 +24,8 @@ class NGOCategoriesFragment : BaseFragment<FragmentNgoCategoriesBinding>() {
             observe(ngoCategoriesChannel.receiveAsFlow(), ::handleEvents)
             init()
         }
+
+        actionBar?.title = getString(R.string.app_name)
     }
 
     private fun handleEvents(event: BaseEvent) {
@@ -32,28 +35,12 @@ class NGOCategoriesFragment : BaseFragment<FragmentNgoCategoriesBinding>() {
                     NgoCategoriesAdapter(event.categories) { category ->
                         findNavController().navigate(
                             NGOCategoriesFragmentDirections.actionNgoInstitutions(
-                                category.id.toInt()
+                                category.id.toInt(),category.name
                             )
                         )
-                        /*findNavController().navigate(
-                            NGOCategoriesFragmentDirections.
-                        )
-                        navigator.navigate(
-                            NGOInstitutionsFragment.newInstance(),
-                            Bundle().apply {
-                                putString(CATEGORY_ID, category.id)
-                            }
-                        )*/
                     }
             }
-             else -> {}
+            else -> {}
         }
-    }
-
-    companion object {
-        fun newInstance(): BaseFragment<*> {
-            return NGOCategoriesFragment()
-        }
-        private const val CATEGORY_ID = "CATEGORY_ID"
     }
 }

@@ -5,8 +5,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.ActionBar
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.makeadonation.MainActivity
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.BaseFragment
 import com.app.makeadonation.common.observe
@@ -26,6 +29,8 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
             observe(ngoInstitutionsChannel.receiveAsFlow(), ::handleEvents)
             init(args.ngoCategoryId)
         }
+
+        actionBar?.title = args.ngoCategoryName
     }
 
     private fun handleEvents(event: BaseEvent) {

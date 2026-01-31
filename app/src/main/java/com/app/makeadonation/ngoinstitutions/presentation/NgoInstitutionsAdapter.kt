@@ -9,8 +9,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.app.makeadonation.R
+import com.app.makeadonation.common.Utils
 import com.app.makeadonation.databinding.NgoItemBinding
-import com.app.makeadonation.ngocategories.domain.entity.NgoCategory
+import com.app.makeadonation.databinding.NgoSelectedInstitutionInfoBinding
 import com.app.makeadonation.ngoinstitutions.domain.entity.NgoInfo
 import java.util.Locale
 
@@ -24,7 +25,8 @@ class NgoInstitutionsAdapter(
             parent,
             false
         )
-        return ViewHolder(binding)
+
+        return ViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -34,19 +36,30 @@ class NgoInstitutionsAdapter(
     override fun getItemCount(): Int = items.size
 
     inner class ViewHolder(
-        private val binding: NgoItemBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+        private val ngoItemView: View
+    ) : RecyclerView.ViewHolder(ngoItemView) {
         fun bind(item: NgoInfo) {
-            val iconId = binding.root.context.run {
+            val binding = NgoItemBinding.bind(ngoItemView)
+            val iconId = ngoItemView.context.run {
                 resources.getIdentifier(
                     item.imageLink.lowercase(), "drawable", packageName
                 )
             }
+            val contentBinding = NgoSelectedInstitutionInfoBinding.inflate(
+                LayoutInflater.from(ngoItemView.context), binding.content, true
+            )
 
             binding.run {
                 ngoName.text = item.name
                 ngoImage.setImageResource(iconId)
-                ngoItemAdditionalInfo.run {
+
+                content.isVisible = false
+
+                contentBinding.run {
+                    ngoItemAdditionalInfo.run {
+                        ngoDataTitle.text = ngoItemView.context.getString(R.string.date_donation_title)
+                        ngoData.text = Utils.getCurrentDate()
+                    }
                     ngoDescription.run {
                         text = item.info
                         isVisible = item.info.isNotEmpty()
@@ -61,40 +74,33 @@ class NgoInstitutionsAdapter(
                             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                                 donateButton.isEnabled = donationValue.rawValue > 0L
                             }
-
                         })
                     }
                 }
-                var isExpanded = binding.ngoItemAdditionalInfo.root.isVisible
+                var isExpanded = content.isVisible
 
-                binding.run {
-                    container.setOnClickListener {
-                        isExpanded = !isExpanded
+                container.setOnClickListener {
+                    isExpanded = !isExpanded
 
-                        binding.ngoItemAdditionalInfo.root.visibility = if(isExpanded){
-                            View.VISIBLE
-                        } else {
-                            View.GONE
-                        }
-
-                        val drawable = if(isExpanded) {
-                            R.drawable.ic_arrow_up
-                        } else {
-                            R.drawable.ic_arrow_down
-                        }
-
-                        arrow.setImageDrawable(
-                            AppCompatResources.getDrawable(root.context,drawable)
-                        )
+                    contentBinding.run {
+                        content.isVisible = isExpanded
+                        donateButton.isVisible = isExpanded
                     }
 
-                    ngoItemAdditionalInfo.run {
-                        donateButton.setOnClickListener {
-                            onClick(item, donationValue.rawValue)
-                        }
+                    val drawable = if(isExpanded) {
+                        R.drawable.ic_arrow_up
+                    } else {
+                        R.drawable.ic_arrow_down
                     }
+
+                    arrow.setImageDrawable(
+                        AppCompatResources.getDrawable(root.context,drawable)
+                    )
                 }
 
+                donateButton.setOnClickListener {
+                    onClick(item, contentBinding.donationValue.rawValue)
+                }
             }
         }
     }

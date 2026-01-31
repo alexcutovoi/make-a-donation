@@ -16,7 +16,8 @@
             android:id="@+id/titleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Instituições"
+            android:text="@string/ngo_institutions_title"
+            android:textColor="@color/white"
             android:textAppearance="?attr/textAppearanceHeadline6"
             android:paddingBottom="@dimen/material_spacing_medium"/>
 

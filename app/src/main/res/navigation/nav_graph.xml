@@ -5,8 +5,7 @@
     app:startDestination="@id/ngoCategoriesFragment">
     <fragment
         android:id="@+id/ngoCategoriesFragment"
-        android:name="com.app.makeadonation.ngocategories.presentation.NGOCategoriesFragment"
-        android:label="Categories">
+        android:name="com.app.makeadonation.ngocategories.presentation.NGOCategoriesFragment">
 
         <action
             android:id="@+id/action_ngo_institutions"
@@ -15,12 +14,24 @@
     </fragment>
     <fragment
         android:id="@+id/ngoInstitutionsFragment"
-        android:name="com.app.makeadonation.ngoinstitutions.presentation.NGOInstitutionsFragment"
-        android:label="Institutions">
+        android:name="com.app.makeadonation.ngoinstitutions.presentation.NGOInstitutionsFragment">
 
         <argument
             android:name="ngoCategoryId"
             app:argType="integer" />
 
+        <argument
+            android:name="ngoCategoryName"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_ngo_receipt"
+            app:destination="@id/ngoReceiptFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/ngoReceiptFragment"
+        android:name="com.app.makeadonation.ngodonationreceipt.presentation.NGOReceiptFragment">
     </fragment>
 </navigation>

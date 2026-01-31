@@ -1,9 +1,18 @@
 <resources>
-    <string name="app_name">Make a Donation</string>
+    <string name="app_name">Faça uma doação</string>
     <string name="donate">Doar</string>
+    <string name="donate_categories_description">Ajude a causa que mais gostaria</string>
     <string name="donate_label">Valor a doar:</string>
     <string name="ngo_name">Instituição Ambiental</string>
+    <string name="ngo_institutions_title">Instituições</string>
     <string name="ngo_description">Instituição Ambiental é responsável por cuidar de 100 árvores no cerrado e contribui para que o meio ambiente seja preservado</string>
     <string name="return_host">returnhost</string>
     <string name="return_schema">returnschema</string>
+    <string name="thanks_donation">Obrigado pela doação</string>
+    <string name="thanks_donation_description">A %1$s agradeçe seu gesto de carinha</string>
+    <string name="thanks_donation_title">Valor da doação</string>
+    <string name="go_to_home">Voltar ao início</string>
+    <string name="donation_value_sample">R$ 100,00</string>
+    <string name="date_donation_title">Data doação</string>
+    <string name="date_donation_sample">10/05/2025</string>
 </resources>

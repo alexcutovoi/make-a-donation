@@ -24,7 +24,7 @@ class NGOInstitutionsRepositoryImpl : NGOInstitutionsRepository{
     private fun selectNGOsToLoad(ngoCategoryId: Int): String {
         val ngos = hashMapOf(
             0 to "environment_ngos.json",
-            1 to "eduction_ngos.json",
+            1 to "education_ngos.json",
             2 to "social_ngos.json",
             3 to "research_ngos.json"
         )
