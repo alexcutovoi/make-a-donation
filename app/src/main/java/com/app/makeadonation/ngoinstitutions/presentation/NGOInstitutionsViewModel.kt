@@ -9,7 +9,6 @@ import com.app.makeadonation.ngoinstitutions.domain.entity.NgoInfo
 import com.app.makeadonation.ngoinstitutions.domain.usecase.NgoInstitutionsUseCase
 import com.app.makeadonation.payment.PaymentDispatcher
 import com.app.makeadonation.payment.data.mapper.ErrorResponseMapper
-import com.app.makeadonation.payment.data.mapper.SuccessResponseMapper
 import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -58,13 +57,18 @@ class NGOInstitutionsViewModel(
             .collectLatest { data ->
                 when (val result = ngpInstitutionsUseCase.handlePayment(data)) {
                     is PaymentResult.Success ->
-                        _ngoInstitutionsChannel.sendInViewModelScope(
+                        storeDonation(
+                            result.response.price.toLong(),
+                            result.response.id,
+                            selectedNgo
+                        )
+                        /*_ngoInstitutionsChannel.sendInViewModelScope(
                             this@NGOInstitutionsViewModel,
                             NGOInstitutionsEvent.PaymentSuccess (
                                 selectedNgo,
                                 SuccessResponseMapper().generate(result.response)
                             )
-                        )
+                        )*/
 
                     is PaymentResult.Cancel ->
                         _ngoInstitutionsChannel.sendInViewModelScope(
@@ -83,6 +87,19 @@ class NGOInstitutionsViewModel(
                         )
                     else -> {}
                 }
+            }
+    }
+
+    private suspend fun storeDonation(donationValue: Long, donationId: String, ngoInfo: NgoInfo) = viewModelScope.launch {
+        ngpInstitutionsUseCase.storeDonation(donationValue, donationId, ngoInfo)
+            .collectLatest {
+                _ngoInstitutionsChannel.sendInViewModelScope(
+                    this@NGOInstitutionsViewModel,
+                    NGOInstitutionsEvent.PaymentSuccess (
+                        ngoInfo,
+                        donationValue
+                    )
+                )
             }
     }
 }

@@ -8,5 +8,6 @@ import kotlinx.coroutines.flow.Flow
 interface NgoInstitutionsUseCase {
     suspend fun retrieveNGOs(ngoCategoryId: Int) : Flow<List<NgoInfo>>
     suspend fun donate(donationValue: Long) : Flow<Uri>
+    suspend fun storeDonation(donationValue: Long, donationId: String, ngoInfo: NgoInfo) : Flow<Unit>
     fun handlePayment(data: Uri): PaymentResult
 }

@@ -74,10 +74,10 @@ object PaymentCoordinator {
 
         return if(Utils.hasField("totalItems", result)) {
             PaymentResult.ListOrdersSuccess(
-                Utils.retrieveObject(result, ListOrdersResponse::class.java)
+                Utils.retrieveObject<ListOrdersResponse>(result)
             )
         }else {
-            val error = Utils.retrieveObject(result, ErrorResponse::class.java)
+            val error = Utils.retrieveObject<ErrorResponse>(result)
             val cancelledCode = 1
             val errorCode = 2
 
@@ -102,10 +102,10 @@ object PaymentCoordinator {
         // Every order has at lease 1 item
         return if(Utils.hasField("items", result)) {
             PaymentResult.Success(
-                Utils.retrieveObject(result, SuccessResponse::class.java)
+                Utils.retrieveObject<SuccessResponse>(result)
             )
         } else {
-            val error = Utils.retrieveObject(result, ErrorResponse::class.java)
+            val error = Utils.retrieveObject<ErrorResponse>(result)
             val cancelledCode = 1
             val errorCode = 2
 

@@ -48,8 +48,8 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
             }
             is NGOInstitutionsEvent.PaymentSuccess -> {
                 findNavController().navigate(
-                    NGOInstitutionsFragmentDirections.actionNgoReceipt(
-                        event.selectedNgo.name, event.success.price
+                    NGOInstitutionsFragmentDirections.actionNgoDonationCnfirmation(
+                        event.selectedNgo.name, event.donationValue
                     )
                 )
             }

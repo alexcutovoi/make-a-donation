@@ -2,13 +2,17 @@ package com.app.makeadonation.ngoinstitutions.data.repository
 
 import android.net.Uri
 import com.app.makeadonation.common.Utils
+import com.app.makeadonation.framework.storage.Shared
+import com.app.makeadonation.ngoinstitutions.data.model.DonationInfoRequest
 import com.app.makeadonation.ngoinstitutions.data.model.NgoInfoResponse
 import com.app.makeadonation.payment.PaymentCoordinator
 import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class NGOInstitutionsRepositoryImpl : NGOInstitutionsRepository {
+class NGOInstitutionsRepositoryImpl(
+    private val shared: Shared
+) : NGOInstitutionsRepository {
     override suspend fun retrieveNGOs(ngoCategoryId: Int) : List<NgoInfoResponse>  = withContext(Dispatchers.IO) {
         runCatching {
             Utils.retrieveObjectFromFile<List<NgoInfoResponse>>(
@@ -20,6 +24,22 @@ class NGOInstitutionsRepositoryImpl : NGOInstitutionsRepository {
     override suspend fun donate(donationValue: Long) = withContext(Dispatchers.IO) {
         runCatching {
             PaymentCoordinator.createOrderRequest(donationValue)
+        }.getOrThrow()
+    }
+
+    override suspend fun storeDonation(donationInfoRequest: DonationInfoRequest): Unit = withContext(Dispatchers.IO) {
+        runCatching {
+            shared.run {
+                val name = "donations"
+                val donations = getString(name)?.let {
+                    Utils.retrieveObject<ArrayList<DonationInfoRequest>>(it)
+                } ?: arrayListOf()
+
+                donations.run {
+                    add(donationInfoRequest)
+                    writeString(name, Utils.transformToJJsom(this))
+                }
+            }
         }.getOrThrow()
     }
 

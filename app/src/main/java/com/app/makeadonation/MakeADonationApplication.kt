@@ -2,6 +2,7 @@ package com.app.makeadonation
 
 import android.app.Application
 import android.content.Context
+import com.app.makeadonation.framework.storage.di.StorageModule
 import com.app.makeadonation.ngocategories.di.NgoCategoriesModule
 import com.app.makeadonation.ngodonationconfirmation.di.NgoDonationConfirmationModule
 import com.app.makeadonation.ngoinstitutions.di.NgoInstitutionsModule
@@ -21,7 +22,8 @@ class MakeADonationApplication : Application() {
                 NgoCategoriesModule.module,
                 NgoInstitutionsModule.module,
                 NgoDonationConfirmationModule.module,
-                NgoListDonationsModule.module
+                NgoListDonationsModule.module,
+                StorageModule.module
             )
         }
     }

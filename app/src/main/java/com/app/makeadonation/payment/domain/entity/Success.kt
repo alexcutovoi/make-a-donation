@@ -9,7 +9,7 @@ data class Success(
     val paidAmount: Int,
     val payments: List<Payment>,
     val pendingAmount: Int,
-    val price: Int,
+    val price: Long,
     val reference: String,
     val status: String,
     val type: String,

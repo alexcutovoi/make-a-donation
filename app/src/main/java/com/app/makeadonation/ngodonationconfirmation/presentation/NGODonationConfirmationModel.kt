@@ -10,7 +10,7 @@ class NGODonationConfirmationModel : ViewModel() {
     private val _ngoReceiptChannel = Channel<BaseEvent>()
     val ngoReceiptChannel = _ngoReceiptChannel
 
-    fun showDonation(ngoName: String, donationValue: Int) {
+    fun showDonation(ngoName: String, donationValue: Long) {
         _ngoReceiptChannel.sendInViewModelScope(
             this@NGODonationConfirmationModel,
             NGODonationConfirmationEvent.ShowDonationData(

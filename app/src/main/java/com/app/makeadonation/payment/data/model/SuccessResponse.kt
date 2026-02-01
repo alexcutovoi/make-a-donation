@@ -11,7 +11,7 @@ data class SuccessResponse(
     @SerializedName("paidAmount") val paidAmount: Int,
     @SerializedName("payments") val paymentsResponse: List<PaymentResponse>,
     @SerializedName("pendingAmount") val pendingAmount: Int,
-    @SerializedName("price") val price: Int,
+    @SerializedName("price") val price: Long,
     @SerializedName("reference") val reference: String,
     @SerializedName("status") val status: String,
     @SerializedName("type") val type: String,
