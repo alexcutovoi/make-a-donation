@@ -7,4 +7,7 @@ import com.app.makeadonation.ngoinstitutions.domain.entity.NgoInfo
 class NGOInstitutionsEvent : BaseEvent() {
     data class Institutions(val institutions: List<NgoInfo>) : BaseEvent()
     data class PaymentOrder(val uri: Uri) : BaseEvent()
+    data object PaymentSuccess : BaseEvent()
+    data class PaymentCancelled(val title: String, val description: String) : BaseEvent()
+    data class PaymentError(val title: String, val description: String) : BaseEvent()
 }

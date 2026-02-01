@@ -3,7 +3,6 @@ package com.app.makeadonation
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
@@ -12,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.app.makeadonation.common.BaseActivity
 import com.app.makeadonation.databinding.MainActivityBinding
+import com.app.makeadonation.payment.PaymentDispatcher
 
 class MainActivity : BaseActivity<MainActivityBinding>() {
     override val bindingFactory: (LayoutInflater) -> MainActivityBinding = MainActivityBinding::inflate
@@ -26,11 +26,6 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         super.onCreate(savedInstanceState)
 
         setupNavigation()
-
-        /*actionBar?.run {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }*/
     }
 
     private fun setupNavigation () {
@@ -54,7 +49,10 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.i("INFO", "New itnent called")
+
+        intent?.data?.let {
+            PaymentDispatcher.dispatch(it)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 class NGOCategoriesRepositoryImpl : NGOCategoriesRepository{
     override suspend fun retrieveCategories() : List<NgoCategoryResponse>  = withContext(Dispatchers.IO) {
         runCatching {
-            Utils.retrieveJson<List<NgoCategoryResponse>>("ong_categories.json")
+            Utils.retrieveObjectFromFile<List<NgoCategoryResponse>>("ong_categories.json")
         }.getOrThrow()
     }
 }

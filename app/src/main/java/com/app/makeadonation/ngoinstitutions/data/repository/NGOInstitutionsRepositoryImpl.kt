@@ -1,15 +1,17 @@
 package com.app.makeadonation.ngoinstitutions.data.repository
 
+import android.net.Uri
 import com.app.makeadonation.common.Utils
 import com.app.makeadonation.ngoinstitutions.data.model.NgoInfoResponse
 import com.app.makeadonation.payment.PaymentCoordinator
+import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class NGOInstitutionsRepositoryImpl : NGOInstitutionsRepository{
+class NGOInstitutionsRepositoryImpl : NGOInstitutionsRepository {
     override suspend fun retrieveNGOs(ngoCategoryId: Int) : List<NgoInfoResponse>  = withContext(Dispatchers.IO) {
         runCatching {
-            Utils.retrieveJson<List<NgoInfoResponse>>(
+            Utils.retrieveObjectFromFile<List<NgoInfoResponse>>(
                 selectNGOsToLoad(ngoCategoryId)
             )
         }.getOrThrow()
@@ -18,6 +20,12 @@ class NGOInstitutionsRepositoryImpl : NGOInstitutionsRepository{
     override suspend fun donate(donationValue: Long) = withContext(Dispatchers.IO) {
         runCatching {
             PaymentCoordinator.createOrderRequest(donationValue)
+        }.getOrThrow()
+    }
+
+    override fun handlePayment(data: Uri): PaymentResult {
+        runCatching {
+            return PaymentCoordinator.getPaymentResponse(data)
         }.getOrThrow()
     }
 

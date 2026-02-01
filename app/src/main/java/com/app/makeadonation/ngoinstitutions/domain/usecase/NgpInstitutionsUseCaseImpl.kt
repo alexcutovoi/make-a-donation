@@ -1,7 +1,9 @@
 package com.app.makeadonation.ngoinstitutions.domain.usecase
 
+import android.net.Uri
 import com.app.makeadonation.ngoinstitutions.data.mapper.NGOInstitutionsMapperResponse
 import com.app.makeadonation.ngoinstitutions.data.repository.NGOInstitutionsRepository
+import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.flow.flow
 
 class NgpInstitutionsUseCaseImpl(
@@ -19,5 +21,9 @@ class NgpInstitutionsUseCaseImpl(
         emit(
             ngoInstitutionsRepository.donate(donationValue)
         )
+    }
+
+    override fun handlePayment(data: Uri): PaymentResult {
+        return ngoInstitutionsRepository.handlePayment(data)
     }
 }

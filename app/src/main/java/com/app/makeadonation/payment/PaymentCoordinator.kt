@@ -2,17 +2,24 @@ package com.app.makeadonation.payment
 
 import android.net.Uri
 import android.util.Base64
+import android.util.Log
 import com.app.makeadonation.BuildConfig
 import com.app.makeadonation.MakeADonationApplication
 import com.app.makeadonation.R
+import com.app.makeadonation.common.Utils
+import com.app.makeadonation.payment.data.model.ErrorResponse
 import com.app.makeadonation.payment.data.model.ItemRequest
 import com.app.makeadonation.payment.data.model.OrderRequest
+import com.app.makeadonation.payment.data.model.SuccessResponse
+import com.app.makeadonation.payment.domain.entity.PaymentResult
 import com.google.gson.Gson
 import kotlin.String
 
 object PaymentCoordinator {
     private const val PAY_ACTION ="payment"
+    private const val PAY_REVERSAL_ACTION = "payment-reversal"
     private const val LIO_SCHEMA = "lio"
+    private const val RESPONSE = "response"
     private var returnHost = ""
     private var returnSchema = ""
 
@@ -47,23 +54,50 @@ object PaymentCoordinator {
         return Uri.Builder()
             .scheme(LIO_SCHEMA)
             .authority(PAY_ACTION)
-            .appendQueryParameter("request", orderToBase64(orderRequest))
+            .appendQueryParameter(
+                "request",
+                orderToBase64(orderRequest)
+            )
             .appendQueryParameter(
                 "urlCallback",
                 "$returnSchema://$returnHost"
             )
             .build()
+    }
 
-        //val intent = Intent(Intent.ACTION_VIEW, uri)
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        //MakeADonationApplication.getApplicationContext().startActivity(intent)
+    fun getPaymentResponse(data: Uri): PaymentResult {
+        val result = data.getQueryParameter(RESPONSE)?.let {
+            Base64.decode(it, Base64.DEFAULT).decodeToString()
+        } ?: throw IllegalArgumentException("Invalid payment response")
+
+        return runCatching {
+            PaymentResult.Success(
+                Utils.retrieveObject(result, SuccessResponse::class.java)
+            )
+        }.getOrElse {
+            val error = Utils.retrieveObject(result, ErrorResponse::class.java)
+            val cancelledCode = 1
+            val errorCode = 2
+
+            return when (error.code) {
+                cancelledCode -> {
+                    PaymentResult.Cancel(error)
+                }
+                errorCode -> {
+                    PaymentResult.Error(error)
+                }
+                else -> {
+                    throw IllegalArgumentException("Invalid payment response")
+                }
+            }
+        }
     }
 
     private fun generateSKU(): String {
         val length = 5
 
         val letters = (1..length).map {
-            ('a'..'z').random()
+            ('A'..'z').random()
         }.joinToString("")
 
         val numbers = (1..length).joinToString("") {

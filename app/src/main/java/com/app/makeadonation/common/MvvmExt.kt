@@ -8,6 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 fun <T, V: ViewModel> Channel<T>.sendInViewModelScope(scope: V, vararg event: T) {
@@ -24,4 +25,10 @@ fun <T> LifecycleOwner.observe(flow: Flow<T>, action: (t:T) -> Unit) {
             flow.collect{ action(it) }
         }
     }
+}
+
+fun <T> Flow<T>.onException(
+    action: suspend (Throwable) -> Unit
+): Flow<T> = catch { exception ->
+    action(exception)
 }

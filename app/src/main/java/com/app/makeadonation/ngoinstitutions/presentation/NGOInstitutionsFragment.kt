@@ -5,13 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.ActionBar
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.app.makeadonation.MainActivity
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.BaseFragment
+import com.app.makeadonation.common.Utils
 import com.app.makeadonation.common.observe
 import com.app.makeadonation.databinding.FragmentNgoInstitutionsBinding
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -47,13 +46,24 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
                 }
             }
             is NGOInstitutionsEvent.PaymentOrder -> {
-                teste(event.uri)
+                startSDK(event.uri)
+            }
+            is NGOInstitutionsEvent.PaymentSuccess -> {
+                findNavController().navigate(
+                    NGOInstitutionsFragmentDirections.actionNgoReceipt()
+                )
+            }
+            is NGOInstitutionsEvent.PaymentCancelled -> {
+                Utils.showDialog(requireActivity(), event.title, event.description)
+            }
+            is NGOInstitutionsEvent.PaymentError -> {
+                Utils.showDialog(requireActivity(), event.title, event.description)
             }
             else -> {}
         }
     }
 
-    private fun teste(uri: Uri) {
+    private fun startSDK(uri: Uri) {
         val intent = Intent(Intent.ACTION_VIEW, uri)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
