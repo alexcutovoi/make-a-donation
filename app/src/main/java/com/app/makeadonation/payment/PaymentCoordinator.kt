@@ -9,6 +9,7 @@ import com.app.makeadonation.R
 import com.app.makeadonation.common.Utils
 import com.app.makeadonation.payment.data.model.ErrorResponse
 import com.app.makeadonation.payment.data.model.ItemRequest
+import com.app.makeadonation.payment.data.model.ItemResponse
 import com.app.makeadonation.payment.data.model.OrderRequest
 import com.app.makeadonation.payment.data.model.SuccessResponse
 import com.app.makeadonation.payment.domain.entity.PaymentResult
@@ -70,11 +71,12 @@ object PaymentCoordinator {
             Base64.decode(it, Base64.DEFAULT).decodeToString()
         } ?: throw IllegalArgumentException("Invalid payment response")
 
-        return runCatching {
+        // Every order has at lease 1 item
+        return if(Utils.hasField("items", result)) {
             PaymentResult.Success(
                 Utils.retrieveObject(result, SuccessResponse::class.java)
             )
-        }.getOrElse {
+        } else {
             val error = Utils.retrieveObject(result, ErrorResponse::class.java)
             val cancelledCode = 1
             val errorCode = 2
