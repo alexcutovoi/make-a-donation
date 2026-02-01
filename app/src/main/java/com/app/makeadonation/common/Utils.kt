@@ -6,6 +6,7 @@ import com.app.makeadonation.MakeADonationApplication
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -20,6 +21,10 @@ object Utils {
 
     inline fun <reified T> retrieveObject(data: String, clazz: Class<T>): T {
         return Gson().fromJson(data,  clazz)
+    }
+
+    fun hasField(fieldName: String, data: String): Boolean {
+        return JSONObject(data).has(fieldName)
     }
 
     fun getCurrentDate(): String {
