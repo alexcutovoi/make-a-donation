@@ -81,6 +81,7 @@ class NGOInstitutionsViewModel(
                                 "Atenção", ErrorResponseMapper().generate(result.response).reason
                             )
                         )
+                    else -> {}
                 }
             }
     }

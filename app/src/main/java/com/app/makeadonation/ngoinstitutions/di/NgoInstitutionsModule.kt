@@ -1,6 +1,5 @@
 package com.app.makeadonation.ngoinstitutions.di
 
-import com.app.makeadonation.ngocategories.presentation.NGOCategoriesViewModel
 import com.app.makeadonation.ngoinstitutions.data.repository.NGOInstitutionsRepository
 import com.app.makeadonation.ngoinstitutions.data.repository.NGOInstitutionsRepositoryImpl
 import com.app.makeadonation.ngoinstitutions.domain.usecase.NgoInstitutionsUseCase
@@ -11,7 +10,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-object NgoInfoModule {
+object NgoInstitutionsModule {
     val module = module {
         factoryOf(::NGOInstitutionsRepositoryImpl) bind NGOInstitutionsRepository::class
         factoryOf(::NgpInstitutionsUseCaseImpl) bind NgoInstitutionsUseCase::class

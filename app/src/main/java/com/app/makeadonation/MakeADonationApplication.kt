@@ -2,9 +2,10 @@ package com.app.makeadonation
 
 import android.app.Application
 import android.content.Context
-import com.app.makeadonation.ngocategories.di.NgoCategoryModule
+import com.app.makeadonation.ngocategories.di.NgoCategoriesModule
 import com.app.makeadonation.ngodonationconfirmation.di.NgoDonationConfirmationModule
-import com.app.makeadonation.ngoinstitutions.di.NgoInfoModule
+import com.app.makeadonation.ngoinstitutions.di.NgoInstitutionsModule
+import com.app.makeadonation.ngolistdonations.di.NgoListDonationsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.inject
@@ -17,9 +18,10 @@ class MakeADonationApplication : Application() {
         startKoin {
             androidContext(this@MakeADonationApplication)
             modules(
-                NgoCategoryModule.module,
-                NgoInfoModule.module,
-                NgoDonationConfirmationModule.module
+                NgoCategoriesModule.module,
+                NgoInstitutionsModule.module,
+                NgoDonationConfirmationModule.module,
+                NgoListDonationsModule.module
             )
         }
     }

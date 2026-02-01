@@ -1,6 +1,8 @@
 package com.app.makeadonation.common
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,5 +30,12 @@ abstract class BaseFragment<VB : ViewBinding>() : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         baseActivity = context as BaseActivity<*>
+    }
+
+    fun startSDK(uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        startActivity(intent)
     }
 }

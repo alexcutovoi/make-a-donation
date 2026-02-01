@@ -26,6 +26,8 @@ class NGOCategoriesFragment : BaseFragment<FragmentNgoCategoriesBinding>() {
         }
 
         actionBar?.title = getString(R.string.app_name)
+
+        setup()
     }
 
     private fun handleEvents(event: BaseEvent) {
@@ -41,6 +43,14 @@ class NGOCategoriesFragment : BaseFragment<FragmentNgoCategoriesBinding>() {
                     }
             }
             else -> {}
+        }
+    }
+
+    private fun setup() {
+        binding.listDonationButton.setOnClickListener {
+            findNavController().navigate(
+                NGOCategoriesFragmentDirections.actionNgoListDonations()
+            )
         }
     }
 }

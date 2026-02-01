@@ -11,6 +11,10 @@
             android:id="@+id/action_ngo_institutions"
             app:destination="@id/ngoInstitutionsFragment" />
 
+        <action
+            android:id="@+id/action_ngo_list_donations"
+            app:destination="@id/ngoListDonationsFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/ngoInstitutionsFragment"
@@ -49,4 +53,8 @@
             android:name="ngoDonationValue"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/ngoListDonationsFragment"
+        android:name="com.app.makeadonation.ngolistdonations.presentation.NGOListDonationsFragment" />
 </navigation>

@@ -1,19 +1,17 @@
 package com.app.makeadonation.payment
 
 import android.net.Uri
-import android.util.Base64
-import android.util.Log
 import com.app.makeadonation.BuildConfig
 import com.app.makeadonation.MakeADonationApplication
 import com.app.makeadonation.R
 import com.app.makeadonation.common.Utils
 import com.app.makeadonation.payment.data.model.ErrorResponse
 import com.app.makeadonation.payment.data.model.ItemRequest
-import com.app.makeadonation.payment.data.model.ItemResponse
+import com.app.makeadonation.payment.data.model.ListOrdersRequest
+import com.app.makeadonation.payment.data.model.ListOrdersResponse
 import com.app.makeadonation.payment.data.model.OrderRequest
 import com.app.makeadonation.payment.data.model.SuccessResponse
 import com.app.makeadonation.payment.domain.entity.PaymentResult
-import com.google.gson.Gson
 import kotlin.String
 
 object PaymentCoordinator {
@@ -21,6 +19,7 @@ object PaymentCoordinator {
     private const val PAY_REVERSAL_ACTION = "payment-reversal"
     private const val LIO_SCHEMA = "lio"
     private const val RESPONSE = "response"
+    private const val LIST_ORDERS = "orders"
     private var returnHost = ""
     private var returnSchema = ""
 
@@ -35,7 +34,6 @@ object PaymentCoordinator {
         val orderRequest = OrderRequest(
             BuildConfig.CREDENTIALS_ACCESS_TOKEN,
             BuildConfig.CREDENTIALS_CLIENT_ID,
-            email = "asd@aol.com",
             installments = 1,
             items = mutableListOf(
                 ItemRequest(
@@ -52,24 +50,54 @@ object PaymentCoordinator {
             merchantCode = null
         )
 
-        return Uri.Builder()
-            .scheme(LIO_SCHEMA)
-            .authority(PAY_ACTION)
-            .appendQueryParameter(
-                "request",
-                orderToBase64(orderRequest)
+        return createUri(PAY_ACTION, Utils.encodeToBase64(orderRequest))
+    }
+
+    fun listPayments(page:Int, items: Int): Uri {
+        val maxNumOfItems = 5
+        val numOfItems = items.takeIf {
+            it <= maxNumOfItems
+        } ?: maxNumOfItems
+
+        val listOrdersRequest = ListOrdersRequest(
+            page,
+            numOfItems,
+            BuildConfig.CREDENTIALS_ACCESS_TOKEN,
+            BuildConfig.CREDENTIALS_CLIENT_ID,
+        )
+        return createUri(LIST_ORDERS, Utils.encodeToBase64(listOrdersRequest))
+    }
+
+    fun getPaymentList(data: Uri): PaymentResult {
+        val result = Utils.decodeFromBase64(data, RESPONSE) ?:
+        throw IllegalArgumentException("Invalid payment response")
+
+        return if(Utils.hasField("totalItems", result)) {
+            PaymentResult.ListOrdersSuccess(
+                Utils.retrieveObject(result, ListOrdersResponse::class.java)
             )
-            .appendQueryParameter(
-                "urlCallback",
-                "$returnSchema://$returnHost"
-            )
-            .build()
+        }else {
+            val error = Utils.retrieveObject(result, ErrorResponse::class.java)
+            val cancelledCode = 1
+            val errorCode = 2
+
+            return when (error.code) {
+                cancelledCode -> {
+                    PaymentResult.Cancel(error)
+                }
+                errorCode -> {
+                    PaymentResult.Error(error)
+                }
+                else -> {
+                    throw IllegalArgumentException("Invalid payment response")
+                }
+            }
+        }
     }
 
     fun getPaymentResponse(data: Uri): PaymentResult {
-        val result = data.getQueryParameter(RESPONSE)?.let {
-            Base64.decode(it, Base64.DEFAULT).decodeToString()
-        } ?: throw IllegalArgumentException("Invalid payment response")
+        val result = Utils.decodeFromBase64(data, RESPONSE) ?:
+        throw IllegalArgumentException("Invalid payment response")
 
         // Every order has at lease 1 item
         return if(Utils.hasField("items", result)) {
@@ -109,38 +137,24 @@ object PaymentCoordinator {
         return "$letters$numbers"
     }
 
-    private fun orderToBase64(order: OrderRequest): String {
+    /*private fun <T> orderToBase64(order: T): String {
         val data = Gson().toJson(order).toString().toByteArray(Charsets.UTF_8)
 
         return Base64.encodeToString(data, Base64.DEFAULT)
+    }*/
+
+    private fun createUri(action: String, data: String): Uri {
+        return Uri.Builder()
+            .scheme(LIO_SCHEMA)
+            .authority(action)
+            .appendQueryParameter(
+                "request",
+                data
+            )
+            .appendQueryParameter(
+                "urlCallback",
+                "$returnSchema://$returnHost"
+            )
+            .build()
     }
 }
-
-/*DEBITO_AVISTA
-DEBITO_PAGTO_FATURA_DEBITO
-CREDITO_AVISTA
-CREDITO_PARCELADO_LOJA
-CREDITO_PARCELADO_ADM
-CREDITO_PARCELADO_BNCO
-PRE_AUTORIZACAO
-CREDITO_PARCELADO_CLIENTE
-CREDITO_CREDIARIO_CREDITO
-VOUCHER_ALIMENTACAO
-VOUCHER_REFEICAO
-VOUCHER_AUTOMOTIVO
-VOUCHER_CULTURA
-VOUCHER_PEDAGIO
-VOUCHER_BENEFICIOS
-VOUCHER_AUTO
-VOUCHER_CONSULTA_SALDO
-VOUCHER_VALE_PEDAGIO
-CREDIARIO_VENDA
-CREDIARIO_SIMULACAO
-CARTAO_LOJA_AVISTA
-CARTAO_LOJA_PARCELADO_LOJA
-CARTAO_LOJA_PARCELADO
-CARTAO_LOJA_PARCELADO_BANCO
-CARTAO_LOJA_PAGTO_FATURA_CHEQUE
-CARTAO_LOJA_PAGTO_FATURA_DINHEIRO
-FROTAS
-PIX*/

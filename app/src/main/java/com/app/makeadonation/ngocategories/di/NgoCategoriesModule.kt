@@ -10,7 +10,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-object NgoCategoryModule {
+object NgoCategoriesModule {
     val module = module {
 
         factoryOf(::NGOCategoriesRepositoryImpl) bind NGOCategoriesRepository::class

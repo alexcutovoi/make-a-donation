@@ -1,7 +1,5 @@
 package com.app.makeadonation.ngoinstitutions.presentation
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -63,12 +61,5 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
             }
             else -> {}
         }
-    }
-
-    private fun startSDK(uri: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-
-        startActivity(intent)
     }
 }

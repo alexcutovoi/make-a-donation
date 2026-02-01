@@ -1,44 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue"
-    android:fillViewport="true">
-
-    <LinearLayout
+    android:padding="@dimen/material_spacing_large">
+    <androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/list_donation_button">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleText"
+                style="@style/TextAppearance.Material3.TitleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/donate"
+                android:textColor="@color/white"
+                android:paddingBottom="@dimen/material_spacing_small"/>
+
+            <TextView
+                android:id="@+id/subtitleText"
+                style="@style/TextAppearance.Material3.BodyMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/donate_categories_description"
+                android:textColor="@color/white"
+                android:paddingBottom="@dimen/material_spacing_large"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                android:clipToPadding="false"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/list_donation_button"
+        style="@style/SecondaryButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/material_spacing_large">
-
-        <TextView
-            android:id="@+id/titleText"
-            style="@style/TextAppearance.Material3.TitleLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/donate"
-            android:textColor="@color/white"
-            android:paddingBottom="@dimen/material_spacing_small"/>
-
-        <TextView
-            android:id="@+id/subtitleText"
-            style="@style/TextAppearance.Material3.BodyMedium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/donate_categories_description"
-            android:textColor="@color/white"
-            android:paddingBottom="@dimen/material_spacing_large"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/categories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            android:clipToPadding="false"/>
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+        android:layout_marginTop="@dimen/material_spacing_large"
+        android:padding="@dimen/material_spacing_medium"
+        android:text="@string/check_donations"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

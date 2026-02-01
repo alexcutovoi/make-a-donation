@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/donate_label"
+        android:text="@string/donation_value_title"
         android:layout_marginTop="@dimen/material_spacing_medium"
         android:textAppearance="?attr/textAppearanceCaption" />
 

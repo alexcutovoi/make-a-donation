@@ -1,6 +1,8 @@
 package com.app.makeadonation.common
 
 import android.content.Context
+import android.net.Uri
+import android.util.Base64
 import com.app.makeadonation.MakeADonationApplication
 import com.app.makeadonation.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,6 +25,18 @@ object Utils {
 
     inline fun <reified T> retrieveObject(data: String, clazz: Class<T>): T {
         return Gson().fromJson(data,  clazz)
+    }
+
+    fun <T> encodeToBase64(order: T): String {
+        val data = Gson().toJson(order).toString().toByteArray(Charsets.UTF_8)
+
+        return Base64.encodeToString(data, Base64.DEFAULT)
+    }
+
+    fun decodeFromBase64(data: Uri, queryParameter: String): String? {
+        return data.getQueryParameter(queryParameter)?.let {
+            Base64.decode(it, Base64.DEFAULT).decodeToString()
+        }
     }
 
     fun hasField(fieldName: String, data: String): Boolean {
