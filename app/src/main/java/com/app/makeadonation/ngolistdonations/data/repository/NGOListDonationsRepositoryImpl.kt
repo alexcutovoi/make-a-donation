@@ -13,26 +13,9 @@ class NGOListDonationsRepositoryImpl : NGOListDonationsRepository {
         }.getOrThrow()
     }
 
-    /*override suspend fun donate(donationValue: Long) = withContext(Dispatchers.IO) {
-        runCatching {
-            PaymentCoordinator.createOrderRequest(donationValue)
-        }.getOrThrow()
-    }*/
-
     override fun handlePaymentList(data: Uri): PaymentResult {
         runCatching {
             return PaymentCoordinator.getPaymentList(data)
         }.getOrThrow()
     }
-
-    /*private fun selectNGOsToLoad(ngoCategoryId: Int): String {
-        val ngos = hashMapOf(
-            0 to "environment_ngos.json",
-            1 to "education_ngos.json",
-            2 to "social_ngos.json",
-            3 to "research_ngos.json"
-        )
-
-        return ngos[ngoCategoryId]!!
-    }*/
 }
