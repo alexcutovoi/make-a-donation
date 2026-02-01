@@ -1,8 +1,6 @@
 package com.app.makeadonation.ngolistdonations.data.repository
 
 import android.net.Uri
-import com.app.makeadonation.common.Utils
-import com.app.makeadonation.ngoinstitutions.data.model.NgoInfoResponse
 import com.app.makeadonation.payment.PaymentCoordinator
 import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.Dispatchers
