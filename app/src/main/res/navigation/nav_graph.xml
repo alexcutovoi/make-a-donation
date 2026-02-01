@@ -26,12 +26,27 @@
 
         <action
             android:id="@+id/action_ngo_receipt"
-            app:destination="@id/ngoReceiptFragment" />
+            app:destination="@id/ngoDonationConfirmationFragment">
+            <argument
+                android:name="ngoName"
+                app:argType="string" />
+
+            <argument
+                android:name="ngoDonationValue"
+                app:argType="integer" />
+        </action>
 
     </fragment>
 
     <fragment
-        android:id="@+id/ngoReceiptFragment"
-        android:name="com.app.makeadonation.ngodonationreceipt.presentation.NGOReceiptFragment">
+        android:id="@+id/ngoDonationConfirmationFragment"
+        android:name="com.app.makeadonation.ngodonationconfirmation.presentation.NGODonationConfirmationFragment">
+        <argument
+            android:name="ngoName"
+            app:argType="string" />
+
+        <argument
+            android:name="ngoDonationValue"
+            app:argType="integer" />
     </fragment>
 </navigation>

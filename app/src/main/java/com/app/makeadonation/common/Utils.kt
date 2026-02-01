@@ -1,13 +1,15 @@
 package com.app.makeadonation.common
 
 import android.content.Context
-import androidx.fragment.app.DialogFragment
 import com.app.makeadonation.MakeADonationApplication
+import com.app.makeadonation.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.util.Currency
 import java.util.Date
 import java.util.Locale
 
@@ -35,8 +37,16 @@ object Utils {
         return sdf.format(Date())
     }
 
+    fun formatCurrency(value: Int):String {
+        val locale = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+
+        locale.currency = Currency.getInstance("BRL")
+
+        return locale.format(value / 100.0)
+    }
+
     fun showDialog(context: Context, title: String, description: String) {
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme)
             .setTitle(title)
             .setMessage(description)
             .setCancelable(false)

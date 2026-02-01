@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.onException
 import com.app.makeadonation.common.sendInViewModelScope
+import com.app.makeadonation.ngoinstitutions.domain.entity.NgoInfo
 import com.app.makeadonation.ngoinstitutions.domain.usecase.NgoInstitutionsUseCase
 import com.app.makeadonation.payment.PaymentDispatcher
+import com.app.makeadonation.payment.data.mapper.ErrorResponseMapper
+import com.app.makeadonation.payment.data.mapper.SuccessResponseMapper
 import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -18,12 +21,16 @@ class NGOInstitutionsViewModel(
     private val _ngoInstitutionsChannel = Channel<BaseEvent>()
     val ngoInstitutionsChannel = _ngoInstitutionsChannel
 
+    private lateinit var selectedNgo: NgoInfo
+
     fun init(ngoCategoryId: Int) {
         retrieveCategories(ngoCategoryId)
         handlePayment()
     }
 
-    fun donate(donationValue: Long)  = viewModelScope.launch {
+    fun donate(selectedNgo: NgoInfo, donationValue: Long)  = viewModelScope.launch {
+        this@NGOInstitutionsViewModel.selectedNgo = selectedNgo
+
         ngpInstitutionsUseCase.donate(donationValue)
             .collectLatest { uri ->
                 _ngoInstitutionsChannel.sendInViewModelScope(
@@ -53,22 +60,25 @@ class NGOInstitutionsViewModel(
                     is PaymentResult.Success ->
                         _ngoInstitutionsChannel.sendInViewModelScope(
                             this@NGOInstitutionsViewModel,
-                            NGOInstitutionsEvent.PaymentSuccess
+                            NGOInstitutionsEvent.PaymentSuccess (
+                                selectedNgo,
+                                SuccessResponseMapper().generate(result.response)
+                            )
                         )
 
                     is PaymentResult.Cancel ->
                         _ngoInstitutionsChannel.sendInViewModelScope(
                             this@NGOInstitutionsViewModel,
-                            NGOInstitutionsEvent.PaymentCancelled(
-                                "", result.response.reason
+                            NGOInstitutionsEvent.PaymentError (
+                                "Atenção", ErrorResponseMapper().generate(result.response).reason
                             )
                         )
 
                     is PaymentResult.Error ->
                         _ngoInstitutionsChannel.sendInViewModelScope(
                             this@NGOInstitutionsViewModel,
-                            NGOInstitutionsEvent.PaymentError(
-                                "", result.response.reason
+                            NGOInstitutionsEvent.PaymentError (
+                                "Atenção", ErrorResponseMapper().generate(result.response).reason
                             )
                         )
                 }

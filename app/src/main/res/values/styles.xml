@@ -19,4 +19,23 @@
         <item name="android:paddingEnd">16dp</item>
         <item name="android:minHeight">48dp</item>
     </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="shapeAppearanceOverlay">@style/AlertDialogShape</item>
+        <item name="buttonBarPositiveButtonStyle">
+            @style/AlertDialogPositiveButton
+        </item>
+    </style>
+
+    <style name="AlertDialogShape" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="AlertDialogPositiveButton"
+        parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+
+        <item name="android:textColor">@color/black</item>
+
+    </style>
 </resources>

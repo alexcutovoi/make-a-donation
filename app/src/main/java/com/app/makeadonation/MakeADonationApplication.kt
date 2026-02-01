@@ -3,7 +3,7 @@ package com.app.makeadonation
 import android.app.Application
 import android.content.Context
 import com.app.makeadonation.ngocategories.di.NgoCategoryModule
-import com.app.makeadonation.ngodonationreceipt.di.NgoReceiptModule
+import com.app.makeadonation.ngodonationconfirmation.di.NgoDonationConfirmationModule
 import com.app.makeadonation.ngoinstitutions.di.NgoInfoModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -19,7 +19,7 @@ class MakeADonationApplication : Application() {
             modules(
                 NgoCategoryModule.module,
                 NgoInfoModule.module,
-                NgoReceiptModule.module
+                NgoDonationConfirmationModule.module
             )
         }
     }

@@ -38,7 +38,7 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
                 binding.ngoRecyclerView.run {
                     adapter =
                         NgoInstitutionsAdapter(event.institutions) { ngoInfo, value ->
-                            ngoInstitutionsViewModel.donate(value)
+                            ngoInstitutionsViewModel.donate(ngoInfo, value)
                         }
                     layoutManager = LinearLayoutManager(
                         requireContext(), LinearLayoutManager.VERTICAL, false
@@ -50,7 +50,9 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
             }
             is NGOInstitutionsEvent.PaymentSuccess -> {
                 findNavController().navigate(
-                    NGOInstitutionsFragmentDirections.actionNgoReceipt()
+                    NGOInstitutionsFragmentDirections.actionNgoReceipt(
+                        event.selectedNgo.name, event.success.price
+                    )
                 )
             }
             is NGOInstitutionsEvent.PaymentCancelled -> {
