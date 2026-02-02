@@ -40,13 +40,6 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
-    fun teste(uri: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-
-        startActivity(intent)
-    }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
