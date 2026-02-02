@@ -5,6 +5,8 @@ import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.payment.domain.entity.ListOrders
 
 class NGOListDonationsEvent : BaseEvent() {
+    data class CancelDonation(val uri: Uri) : BaseEvent()
+    data class CancelledDonation(val title: String, val description: String) : BaseEvent()
     data class ListDonations(val uri: Uri) : BaseEvent()
     data class ListOrdersSuccess(val listOrders: ListOrders) : BaseEvent()
     data class PaymentCancelled(val title: String, val description: String) : BaseEvent()

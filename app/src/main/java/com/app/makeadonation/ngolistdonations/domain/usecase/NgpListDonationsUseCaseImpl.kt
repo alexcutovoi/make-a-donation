@@ -17,4 +17,10 @@ class NgpListDonationsUseCaseImpl(
     override fun handlePaymentList(data: Uri): PaymentResult {
         return ngoListDonationsRepository.handlePaymentList(data)
     }
+
+    override suspend fun cancelDonation(id: String, cieloCode: String, authCode: String, value: Long) = flow {
+        emit(
+        ngoListDonationsRepository.cancelDonation(id, cieloCode, authCode, value)
+        )
+    }
 }

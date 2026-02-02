@@ -5,6 +5,7 @@ import com.app.makeadonation.BuildConfig
 import com.app.makeadonation.MakeADonationApplication
 import com.app.makeadonation.R
 import com.app.makeadonation.common.Utils
+import com.app.makeadonation.payment.data.model.DonationCancellationRequest
 import com.app.makeadonation.payment.data.model.ErrorResponse
 import com.app.makeadonation.payment.data.model.ItemRequest
 import com.app.makeadonation.payment.data.model.ListOrdersRequest
@@ -68,6 +69,18 @@ object PaymentCoordinator {
         return createUri(LIST_ORDERS, Utils.encodeToBase64(listOrdersRequest))
     }
 
+    fun cancelOrder(id: String, cieloCode: String, authCode: String, value: Long): Uri {
+        val cancelOrderRequest = DonationCancellationRequest(
+            id,
+            BuildConfig.CREDENTIALS_ACCESS_TOKEN,
+            BuildConfig.CREDENTIALS_CLIENT_ID,
+            cieloCode,
+            authCode,
+            value
+        )
+        return createUri(PAY_REVERSAL_ACTION, Utils.encodeToBase64(cancelOrderRequest))
+    }
+
     fun getPaymentList(data: Uri): PaymentResult {
         val result = Utils.decodeFromBase64(data, RESPONSE) ?:
         throw IllegalArgumentException("Invalid payment response")
@@ -76,7 +89,11 @@ object PaymentCoordinator {
             PaymentResult.ListOrdersSuccess(
                 Utils.retrieveObject<ListOrdersResponse>(result)
             )
-        }else {
+        } else if(Utils.hasField("status", result)) {
+                PaymentResult.CancelledOrderSuccess(
+                    Utils.retrieveObject<SuccessResponse>(result)
+                )
+        } else {
             val error = Utils.retrieveObject<ErrorResponse>(result)
             val cancelledCode = 1
             val errorCode = 2

@@ -18,4 +18,10 @@ class NGOListDonationsRepositoryImpl : NGOListDonationsRepository {
             return PaymentCoordinator.getPaymentList(data)
         }.getOrThrow()
     }
+
+    override suspend fun cancelDonation(id: String, cieloCode: String, authCode: String, value: Long) = withContext(Dispatchers.IO) {
+        runCatching {
+            PaymentCoordinator.cancelOrder(id, cieloCode, authCode, value)
+        }.getOrThrow()
+    }
 }

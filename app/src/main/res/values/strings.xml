@@ -21,4 +21,6 @@
     <string name="donation_date_title">Data</string>
     <string name="donation_status">Status</string>
     <string name="cancel_donation">Cancelar doação</string>
+    <string name="donation_successfully_canceled">Doação cancelada com sucesso</string>
+    <string name="warning">Aviso</string>
 </resources>

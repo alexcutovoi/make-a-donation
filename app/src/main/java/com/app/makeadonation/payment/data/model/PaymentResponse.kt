@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PaymentResponse(
     @SerializedName("accessKey") val accessKey: String,
-    @SerializedName("amount") val amount: Int,
+    @SerializedName("amount") val amount: Long,
     @SerializedName("applicationName") val applicationName: String,
     @SerializedName("authCode") val authCode: String,
     @SerializedName("brand") val brand: String,

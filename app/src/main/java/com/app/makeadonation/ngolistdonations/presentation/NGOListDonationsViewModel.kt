@@ -2,6 +2,8 @@ package com.app.makeadonation.ngolistdonations.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.makeadonation.MakeADonationApplication
+import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.onException
 import com.app.makeadonation.common.sendInViewModelScope
@@ -10,6 +12,7 @@ import com.app.makeadonation.ngolistdonations.domain.usecase.NgoListDonationsUse
 import com.app.makeadonation.payment.PaymentDispatcher
 import com.app.makeadonation.payment.data.mapper.ErrorResponseMapper
 import com.app.makeadonation.payment.data.mapper.ListOrdersMapper
+import com.app.makeadonation.payment.domain.entity.Payment
 import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
@@ -28,12 +31,26 @@ class NGOListDonationsViewModel(
         handlePayment()
     }
 
-    private fun listDonations() = viewModelScope.launch {
+    fun cancelOrder(ident: String, payment: Payment) = viewModelScope.launch {
+        //this@NGOListDonationsViewModel.selectedNgo = selectedNgo
+
+        payment.run {
+            ngpListDonationsUseCase.cancelDonation(ident, cieloCode, authCode, amount)
+                .collectLatest {
+                    _ngoListDonationsChannel.sendInViewModelScope(
+                        this@NGOListDonationsViewModel,
+                        NGOListDonationsEvent.CancelDonation(it)
+                    )
+                }
+        }
+    }
+
+    fun listDonations() = viewModelScope.launch {
         ngpListDonationsUseCase.listDonations(0, 5)
-            .collectLatest  {
+            .collectLatest {
                 _ngoListDonationsChannel.sendInViewModelScope(
                     this@NGOListDonationsViewModel,
-                        NGOListDonationsEvent.ListDonations(it)
+                    NGOListDonationsEvent.ListDonations(it)
                 )
             }
     }
@@ -46,15 +63,31 @@ class NGOListDonationsViewModel(
                     is PaymentResult.ListOrdersSuccess ->
                         _ngoListDonationsChannel.sendInViewModelScope(
                             this@NGOListDonationsViewModel,
-                            NGOListDonationsEvent.ListOrdersSuccess (
+                            NGOListDonationsEvent.ListOrdersSuccess(
                                 ListOrdersMapper().generate(result.response)
                             )
                         )
 
+                    is PaymentResult.CancelledOrderSuccess -> {
+                        _ngoListDonationsChannel.sendInViewModelScope(
+                            this@NGOListDonationsViewModel,
+                            MakeADonationApplication.getApplicationContext().run {
+                                NGOListDonationsEvent.CancelledDonation(
+                                    getString(
+                                        R.string.warning
+                                    ),
+                                    getString(
+                                        R.string.donation_successfully_canceled
+                                    )
+                                )
+                            }
+                        )
+                    }
+
                     is PaymentResult.Cancel ->
                         _ngoListDonationsChannel.sendInViewModelScope(
                             this@NGOListDonationsViewModel,
-                            NGOListDonationsEvent.PaymentError (
+                            NGOListDonationsEvent.PaymentError(
                                 "Atenção", ErrorResponseMapper().generate(result.response).reason
                             )
                         )
@@ -62,10 +95,11 @@ class NGOListDonationsViewModel(
                     is PaymentResult.Error ->
                         _ngoListDonationsChannel.sendInViewModelScope(
                             this@NGOListDonationsViewModel,
-                            NGOListDonationsEvent.PaymentError (
+                            NGOListDonationsEvent.PaymentError(
                                 "Atenção", ErrorResponseMapper().generate(result.response).reason
                             )
                         )
+
                     else -> {}
                 }
             }

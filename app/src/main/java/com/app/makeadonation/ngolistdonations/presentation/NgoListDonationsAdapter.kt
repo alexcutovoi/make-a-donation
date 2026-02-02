@@ -10,11 +10,12 @@ import com.app.makeadonation.R
 import com.app.makeadonation.common.Utils
 import com.app.makeadonation.databinding.NgoDonationDataBinding
 import com.app.makeadonation.databinding.NgoItemBinding
+import com.app.makeadonation.payment.domain.entity.Payment
 import com.app.makeadonation.payment.domain.entity.Success
 
 class NgoListDonationsAdapter(
     private val items: List<Success>,
-    private val onClick: (Success,) -> Unit
+    private val onClick: (String, Payment) -> Unit
 ) : RecyclerView.Adapter<NgoListDonationsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = NgoItemBinding.inflate(
@@ -58,7 +59,16 @@ class NgoListDonationsAdapter(
                     }
                     ngoDonationStatus.run {
                         ngoDataTitle.text = ngoItemView.context.getString(R.string.donation_status)
-                        ngoData.text = item.status
+                        ngoData.run {
+                            text = item.getStatusDescription()
+                            setTextColor(
+                                context.getColor(
+                                    R.color.red.takeIf {
+                                        item.isCancelled()
+                                    } ?: R.color.blue
+                                )
+                            )
+                        }
                     }
 
                     donateButton.run {
@@ -87,8 +97,11 @@ class NgoListDonationsAdapter(
                     )
                 }
 
-                donateButton.setOnClickListener {
-                    onClick(item)
+                donateButton.run {
+                    isEnabled = item.payments.isNotEmpty() && item.isCancelled().not()
+                    setOnClickListener {
+                        onClick(item.id,  item.payments.first())
+                    }
                 }
             }
         }

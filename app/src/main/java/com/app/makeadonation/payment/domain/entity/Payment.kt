@@ -2,7 +2,7 @@ package com.app.makeadonation.payment.domain.entity
 
 data class Payment(
     val accessKey: String,
-    val amount: Int,
+    val amount: Long,
     val applicationName: String,
     val authCode: String,
     val brand: String,

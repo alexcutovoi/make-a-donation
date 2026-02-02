@@ -1,7 +1,6 @@
 package com.app.makeadonation.ngolistdonations.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,11 +33,18 @@ class NGOListDonationsFragment : BaseFragment<FragmentNgoListDonationsBinding>()
             is NGOListDonationsEvent.ListDonations -> {
                 startSDK(event.uri)
             }
+            is NGOListDonationsEvent.CancelDonation -> {
+                startSDK(event.uri)
+            }
+            is NGOListDonationsEvent.CancelledDonation -> {
+                ngoListDonationsViewModel.listDonations()
+                Utils.showDialog(requireActivity(), event.title, event.description)
+            }
             is NGOListDonationsEvent.ListOrdersSuccess -> {
                 binding.ngoRecyclerView.run {
                     adapter =
-                        NgoListDonationsAdapter(event.listOrders.orders) { ngoInfo ->
-                           Log.i("INFO", "${ngoInfo.paidAmount}")
+                        NgoListDonationsAdapter(event.listOrders.orders) { id, ngoInfo ->
+                            ngoListDonationsViewModel.cancelOrder(id, ngoInfo)
                         }
                     layoutManager = LinearLayoutManager(
                         requireContext(), LinearLayoutManager.VERTICAL, false

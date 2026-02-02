@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface NgoListDonationsUseCase {
     suspend fun listDonations(page: Int, numberOfItems: Int) : Flow<Uri>
     fun handlePaymentList(data: Uri): PaymentResult
+    suspend fun cancelDonation(id: String, cieloCode: String, authCode: String, value: Long) : Flow<Uri>
 }

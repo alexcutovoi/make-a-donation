@@ -9,4 +9,5 @@ sealed interface PaymentResult {
     data class Error(val response: ErrorResponse) : PaymentResult
     data class Cancel(val response: ErrorResponse) : PaymentResult
     data class ListOrdersSuccess(val response: ListOrdersResponse) : PaymentResult
+    data class CancelledOrderSuccess(val response: SuccessResponse) : PaymentResult
 }
