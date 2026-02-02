@@ -28,7 +28,7 @@ esta activity única.
 **Features**: feitas com MVVM, esutam o dispatcher e tomam as ações necessárias para fazer o fluxo.
 **Commom**: possui utils do projeto.
 
-As funcionalidades de backend de gravar as doações, listar ONGs e categorias foram feitas no paccote de framework (que grava e busca as
+As funcionalidades de backend de gravar as doações, listar ONGs e categorias foram feitas no paccote de **framework** (que grava e busca as
 doações) e também em arquivos JSON lidos nos endpoints simulados de cada feature.  
 
 ## Pagamentos
