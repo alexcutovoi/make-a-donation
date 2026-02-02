@@ -22,11 +22,11 @@ Cada tela é uma feature segregada do app. com clean architeture em seu desenvol
 Todas são instanciadas em uma activity única (container) e a navegação é via nav graph. Desta forma,quem controla toda a parte de voltar é
 esta activity única.
 
-BaseFragment: que todos os fragment usam, permitindo fazer a chamada a simulador via Intent passando a uri correspondente em um ponto central.
-MainActivity: recebe o Intent correspondente e envia ao dispatcher.
-PaymentDispatcher: recebe a ação a ser executada e emite ela em um fluxo escutados pelas features interessadas.
-Features: feitas com MVVM, esutam o dispatcher e tomam as ações necessárias para fazer o fluxo.
-Commom: possui utils do projeto.
+**BaseFragment**: que todos os fragment usam, permitindo fazer a chamada a simulador via Intent passando a uri correspondente em um ponto central.
+**MainActivity**: recebe o Intent correspondente e envia ao dispatcher.
+**PaymentDispatcher**: recebe a ação a ser executada e emite ela em um fluxo escutados pelas features interessadas.
+**Features**: feitas com MVVM, esutam o dispatcher e tomam as ações necessárias para fazer o fluxo.
+**Commom**: possui utils do projeto.
 
 As funcionalidades de backend de gravar as doações, listar ONGs e categorias foram feitas no paccote de framework (que grava e busca as
 doações) e também em arquivos JSON lidos nos endpoints simulados de cada feature.  
@@ -36,7 +36,7 @@ A comunicação com as funcionallidades de pagar, cancelar e listr pagamentos (d
 simular sucesso, erro ou cancelamento de uma operação.
 
 ## Executando o projeto
-Use o seu Client ID e Access Token da sua conta na págoina de [desenvolvedores da Cielo](https://desenvolvedores.cielo.com.br/api-portal/).
+Use o seu **Client ID** e **Access Token** da sua conta na págoina de [desenvolvedores da Cielo](https://desenvolvedores.cielo.com.br/api-portal/).
 Insira no esu arquivo local.properties que o projeto irá ler dele e gerar o BuildConfig correspondente.
 Esse é uma boa medida de seguração porque os local.properties nunca é commitado.
 Exemplo:
