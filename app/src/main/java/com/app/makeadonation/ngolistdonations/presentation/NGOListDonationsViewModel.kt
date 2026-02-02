@@ -53,12 +53,6 @@ class NGOListDonationsViewModel(
                     BaseEvent.ShowLoading
                 )
             }
-            .onCompletion {
-                _ngoListDonationsChannel.sendInViewModelScope(
-                    this@NGOListDonationsViewModel,
-                    BaseEvent.HideLoading
-                )
-            }
             .collectLatest {
                 _ngoListDonationsChannel.sendInViewModelScope(
                     this@NGOListDonationsViewModel,
@@ -69,16 +63,20 @@ class NGOListDonationsViewModel(
 
     private fun handlePayment() = viewModelScope.launch {
         PaymentDispatcher.results
-            .onException {}
             .collectLatest { data ->
                 when (val result = ngpListDonationsUseCase.handlePaymentList(data)) {
-                    is PaymentResult.ListOrdersSuccess ->
+                    is PaymentResult.ListOrdersSuccess -> {
                         _ngoListDonationsChannel.sendInViewModelScope(
                             this@NGOListDonationsViewModel,
                             NGOListDonationsEvent.ListOrdersSuccess(
                                 ListOrdersMapper().generate(result.response)
                             )
                         )
+                        _ngoListDonationsChannel.sendInViewModelScope(
+                            this@NGOListDonationsViewModel,
+                            BaseEvent.HideLoading
+                        )
+                    }
 
                     is PaymentResult.CancelledOrderSuccess -> {
                         _ngoListDonationsChannel.sendInViewModelScope(
