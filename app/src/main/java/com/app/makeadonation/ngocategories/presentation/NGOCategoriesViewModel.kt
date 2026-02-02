@@ -7,6 +7,8 @@ import com.app.makeadonation.common.sendInViewModelScope
 import com.app.makeadonation.ngocategories.domain.usecase.NgoCategoriesUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NGOCategoriesViewModel(
@@ -21,6 +23,18 @@ class NGOCategoriesViewModel(
 
     private fun retrieveCategories() = viewModelScope.launch {
         ngpCategoriesUseCase.retrieveCategories()
+            .onStart {
+                _ngoCategoriesChannel.sendInViewModelScope(
+                    this@NGOCategoriesViewModel,
+                    BaseEvent.ShowLoading
+                )
+            }
+            .onCompletion {
+                _ngoCategoriesChannel.sendInViewModelScope(
+                    this@NGOCategoriesViewModel,
+                    BaseEvent.HideLoading
+                )
+            }
             .collectLatest  {
                 _ngoCategoriesChannel.sendInViewModelScope(
                     this@NGOCategoriesViewModel,

@@ -3,6 +3,7 @@ package com.app.makeadonation.ngolistdonations.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
@@ -56,6 +57,18 @@ class NGOListDonationsFragment : BaseFragment<FragmentNgoListDonationsBinding>()
             }
             is NGOListDonationsEvent.PaymentError -> {
                 Utils.showDialog(requireActivity(), event.title, event.description)
+            }
+            is BaseEvent.ShowLoading -> {
+                binding.run {
+                    ngoInstitutiionsConstainer.isVisible = false
+                    loading.root.isVisible = true
+                }
+            }
+            is BaseEvent.HideLoading -> {
+                binding.run {
+                    ngoInstitutiionsConstainer.isVisible = true
+                    loading.root.isVisible = false
+                }
             }
             else -> {}
         }

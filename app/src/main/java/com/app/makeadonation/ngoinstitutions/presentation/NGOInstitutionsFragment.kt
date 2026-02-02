@@ -3,6 +3,7 @@ package com.app.makeadonation.ngoinstitutions.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,6 +59,18 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
             }
             is NGOInstitutionsEvent.PaymentError -> {
                 Utils.showDialog(requireActivity(), event.title, event.description)
+            }
+            is BaseEvent.ShowLoading -> {
+                binding.run {
+                    ngoInstitutionsContainer.isVisible = false
+                    loading.root.isVisible = true
+                }
+            }
+            is BaseEvent.HideLoading -> {
+                binding.run {
+                    ngoInstitutionsContainer.isVisible = true
+                    loading.root.isVisible = false
+                }
             }
             else -> {}
         }

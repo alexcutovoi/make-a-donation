@@ -12,6 +12,8 @@ import com.app.makeadonation.payment.data.mapper.ErrorResponseMapper
 import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NGOInstitutionsViewModel(
@@ -41,6 +43,18 @@ class NGOInstitutionsViewModel(
 
     private fun retrieveCategories(ngoCategoryId: Int) = viewModelScope.launch {
         ngpInstitutionsUseCase.retrieveNGOs(ngoCategoryId)
+            .onStart {
+                _ngoInstitutionsChannel.sendInViewModelScope(
+                    this@NGOInstitutionsViewModel,
+                    BaseEvent.ShowLoading
+                )
+            }
+            .onCompletion {
+                _ngoInstitutionsChannel.sendInViewModelScope(
+                    this@NGOInstitutionsViewModel,
+                    BaseEvent.HideLoading
+                )
+            }
             .collectLatest  {
                 _ngoInstitutionsChannel.sendInViewModelScope(
                     this@NGOInstitutionsViewModel,

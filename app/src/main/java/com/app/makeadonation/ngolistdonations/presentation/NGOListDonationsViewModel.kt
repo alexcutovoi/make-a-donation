@@ -16,6 +16,8 @@ import com.app.makeadonation.payment.domain.entity.Payment
 import com.app.makeadonation.payment.domain.entity.PaymentResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NGOListDonationsViewModel(
@@ -32,8 +34,6 @@ class NGOListDonationsViewModel(
     }
 
     fun cancelOrder(ident: String, payment: Payment) = viewModelScope.launch {
-        //this@NGOListDonationsViewModel.selectedNgo = selectedNgo
-
         payment.run {
             ngpListDonationsUseCase.cancelDonation(ident, cieloCode, authCode, amount)
                 .collectLatest {
@@ -47,6 +47,18 @@ class NGOListDonationsViewModel(
 
     fun listDonations() = viewModelScope.launch {
         ngpListDonationsUseCase.listDonations(0, 5)
+            .onStart {
+                _ngoListDonationsChannel.sendInViewModelScope(
+                    this@NGOListDonationsViewModel,
+                    BaseEvent.ShowLoading
+                )
+            }
+            .onCompletion {
+                _ngoListDonationsChannel.sendInViewModelScope(
+                    this@NGOListDonationsViewModel,
+                    BaseEvent.HideLoading
+                )
+            }
             .collectLatest {
                 _ngoListDonationsChannel.sendInViewModelScope(
                     this@NGOListDonationsViewModel,

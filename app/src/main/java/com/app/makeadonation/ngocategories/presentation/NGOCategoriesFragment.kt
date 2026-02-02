@@ -3,6 +3,7 @@ package com.app.makeadonation.ngocategories.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
@@ -40,6 +41,20 @@ class NGOCategoriesFragment : BaseFragment<FragmentNgoCategoriesBinding>() {
                             )
                         )
                     }
+            }
+            is BaseEvent.ShowLoading -> {
+                binding.run {
+                    ngoCategoriesContainer.isVisible = false
+                    listDonationButton.isVisible = false
+                    loading.root.isVisible = true
+                }
+            }
+            is BaseEvent.HideLoading -> {
+                binding.run {
+                    ngoCategoriesContainer.isVisible = true
+                    listDonationButton.isVisible = true
+                    loading.root.isVisible = false
+                }
             }
             else -> {}
         }
