@@ -23,4 +23,7 @@
     <string name="cancel_donation">Cancelar doação</string>
     <string name="donation_successfully_canceled">Doação cancelada com sucesso</string>
     <string name="warning">Aviso</string>
+    <string name="donation_try_again">Erro no pagamento. Deseja tentar novamente?</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancelar</string>
 </resources>

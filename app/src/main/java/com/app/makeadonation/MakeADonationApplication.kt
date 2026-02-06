@@ -19,6 +19,7 @@ class MakeADonationApplication : Application() {
         startKoin {
             androidContext(this@MakeADonationApplication)
             modules(
+                MainModule.module,
                 NgoCategoriesModule.module,
                 NgoInstitutionsModule.module,
                 NgoDonationConfirmationModule.module,

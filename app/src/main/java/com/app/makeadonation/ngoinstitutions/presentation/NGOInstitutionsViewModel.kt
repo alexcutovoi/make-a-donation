@@ -2,7 +2,9 @@ package com.app.makeadonation.ngoinstitutions.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
+import com.app.makeadonation.common.TextProvider
 import com.app.makeadonation.common.onException
 import com.app.makeadonation.common.sendInViewModelScope
 import com.app.makeadonation.ngoinstitutions.domain.entity.NgoInfo
@@ -17,28 +19,46 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NGOInstitutionsViewModel(
+    private val textProvider: TextProvider,
     private val ngpInstitutionsUseCase: NgoInstitutionsUseCase
 ) : ViewModel() {
     private val _ngoInstitutionsChannel = Channel<BaseEvent>()
     val ngoInstitutionsChannel = _ngoInstitutionsChannel
 
-    private lateinit var selectedNgo: NgoInfo
+    private var selectedNgo: NgoInfo? = null
+    private var valueToDonate: Long? = null
 
     fun init(ngoCategoryId: Int) {
         retrieveCategories(ngoCategoryId)
         handlePayment()
     }
 
-    fun donate(selectedNgo: NgoInfo, donationValue: Long)  = viewModelScope.launch {
-        this@NGOInstitutionsViewModel.selectedNgo = selectedNgo
+    fun donate(ngoToDonate: NgoInfo, donationValue: Long)  = viewModelScope.launch {
+        selectedNgo = ngoToDonate
+        valueToDonate = donationValue
 
         ngpInstitutionsUseCase.donate(donationValue)
+            .onException {
+                _ngoInstitutionsChannel.sendInViewModelScope(
+                    this@NGOInstitutionsViewModel,
+                    NGOInstitutionsEvent.PaymentError (
+                        textProvider.getText(R.string.warning),
+                        textProvider.getText(R.string.donation_try_again)
+                    )
+                )
+            }
             .collectLatest { uri ->
                 _ngoInstitutionsChannel.sendInViewModelScope(
                     this@NGOInstitutionsViewModel,
                     NGOInstitutionsEvent.PaymentOrder(uri)
                 )
             }
+    }
+
+    fun tryAgain() {
+        if(selectedNgo != null && valueToDonate != null) {
+            donate(selectedNgo!!, valueToDonate!!)
+        }
     }
 
     private fun retrieveCategories(ngoCategoryId: Int) = viewModelScope.launch {
@@ -65,30 +85,23 @@ class NGOInstitutionsViewModel(
 
     private fun handlePayment() = viewModelScope.launch {
         PaymentDispatcher.results
-            .onException {
-
-            }
             .collectLatest { data ->
                 when (val result = ngpInstitutionsUseCase.handlePayment(data)) {
                     is PaymentResult.Success ->
-                        storeDonation(
-                            result.response.price.toLong(),
-                            result.response.id,
-                            selectedNgo
-                        )
-                        /*_ngoInstitutionsChannel.sendInViewModelScope(
-                            this@NGOInstitutionsViewModel,
-                            NGOInstitutionsEvent.PaymentSuccess (
-                                selectedNgo,
-                                SuccessResponseMapper().generate(result.response)
+                        selectedNgo?.let {
+                            storeDonation(
+                                result.response.price,
+                                result.response.id,
+                                it
                             )
-                        )*/
+                        }
 
                     is PaymentResult.Cancel ->
                         _ngoInstitutionsChannel.sendInViewModelScope(
                             this@NGOInstitutionsViewModel,
                             NGOInstitutionsEvent.PaymentError (
-                                "Atenção", ErrorResponseMapper().generate(result.response).reason
+                                textProvider.getText(R.string.warning),
+                                ErrorResponseMapper().generate(result.response).reason
                             )
                         )
 
@@ -96,7 +109,8 @@ class NGOInstitutionsViewModel(
                         _ngoInstitutionsChannel.sendInViewModelScope(
                             this@NGOInstitutionsViewModel,
                             NGOInstitutionsEvent.PaymentError (
-                                "Atenção", ErrorResponseMapper().generate(result.response).reason
+                                textProvider.getText(R.string.warning),
+                                ErrorResponseMapper().generate(result.response).reason
                             )
                         )
                     else -> {}
@@ -114,6 +128,12 @@ class NGOInstitutionsViewModel(
                         donationValue
                     )
                 )
+                clear()
             }
+    }
+
+    private fun clear() {
+        selectedNgo = null
+        valueToDonate = null
     }
 }

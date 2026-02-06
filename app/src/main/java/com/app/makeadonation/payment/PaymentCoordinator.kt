@@ -154,12 +154,6 @@ object PaymentCoordinator {
         return "$letters$numbers"
     }
 
-    /*private fun <T> orderToBase64(order: T): String {
-        val data = Gson().toJson(order).toString().toByteArray(Charsets.UTF_8)
-
-        return Base64.encodeToString(data, Base64.DEFAULT)
-    }*/
-
     private fun createUri(action: String, data: String): Uri {
         return Uri.Builder()
             .scheme(LIO_SCHEMA)

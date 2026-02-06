@@ -23,7 +23,10 @@
     <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="shapeAppearanceOverlay">@style/AlertDialogShape</item>
         <item name="buttonBarPositiveButtonStyle">
-            @style/AlertDialogPositiveButton
+            @style/AlertDialogButton
+        </item>
+        <item name="buttonBarNegativeButtonStyle">
+            @style/AlertDialogButton
         </item>
     </style>
 
@@ -32,7 +35,7 @@
         <item name="cornerSize">20dp</item>
     </style>
 
-    <style name="AlertDialogPositiveButton"
+    <style name="AlertDialogButton"
         parent="Widget.MaterialComponents.Button.TextButton.Dialog">
 
         <item name="android:textColor">@color/black</item>

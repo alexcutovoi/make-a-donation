@@ -58,7 +58,12 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
                 Utils.showDialog(requireActivity(), event.title, event.description)
             }
             is NGOInstitutionsEvent.PaymentError -> {
-                Utils.showDialog(requireActivity(), event.title, event.description)
+                Utils.showDialog(
+                    requireActivity(),
+                    event.title,
+                    event.description,
+                    { ngoInstitutionsViewModel.tryAgain() }
+                )
             }
             is BaseEvent.ShowLoading -> {
                 binding.run {
