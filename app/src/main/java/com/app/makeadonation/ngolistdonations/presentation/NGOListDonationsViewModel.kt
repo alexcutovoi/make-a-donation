@@ -5,15 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.app.makeadonation.MakeADonationApplication
 import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
-import com.app.makeadonation.common.onException
 import com.app.makeadonation.common.sendInViewModelScope
-import com.app.makeadonation.ngoinstitutions.domain.entity.NgoInfo
+import com.app.makeadonation.ngolistdonations.domain.entity.NgoDonationInfo
 import com.app.makeadonation.ngolistdonations.domain.usecase.NgoListDonationsUseCase
 import com.app.makeadonation.payment.PaymentDispatcher
 import com.app.makeadonation.payment.data.mapper.ErrorResponseMapper
 import com.app.makeadonation.payment.data.mapper.ListOrdersMapper
-import com.app.makeadonation.payment.domain.entity.Payment
 import com.app.makeadonation.payment.domain.entity.PaymentResult
+import com.app.makeadonation.payment.domain.entity.Success
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onCompletion
@@ -21,21 +20,21 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NGOListDonationsViewModel(
-    private val ngpListDonationsUseCase: NgoListDonationsUseCase
+    private val ngoListDonationsUseCase: NgoListDonationsUseCase
 ) : ViewModel() {
     private val _ngoListDonationsChannel = Channel<BaseEvent>()
     val ngoListDonationsChannel = _ngoListDonationsChannel
-
-    private lateinit var selectedNgo: NgoInfo
+    private var currentPage = 0
+    private var maxNumOfItems = 5
 
     fun init() {
         listDonations()
         handlePayment()
     }
 
-    fun cancelOrder(ident: String, payment: Payment) = viewModelScope.launch {
-        payment.run {
-            ngpListDonationsUseCase.cancelDonation(ident, cieloCode, authCode, amount)
+    fun cancelOrder(transactionId: String, ngoDonationInfo: NgoDonationInfo) = viewModelScope.launch {
+        ngoDonationInfo.run {
+            ngoListDonationsUseCase.cancelDonation(transactionId, operatorTransactionCode, authDonationCode, donatedValue)
                 .collectLatest {
                     _ngoListDonationsChannel.sendInViewModelScope(
                         this@NGOListDonationsViewModel,
@@ -46,7 +45,7 @@ class NGOListDonationsViewModel(
     }
 
     fun listDonations() = viewModelScope.launch {
-        ngpListDonationsUseCase.listDonations(0, 5)
+        ngoListDonationsUseCase.listRegisteredDonations(currentPage, maxNumOfItems)
             .onStart {
                 _ngoListDonationsChannel.sendInViewModelScope(
                     this@NGOListDonationsViewModel,
@@ -60,21 +59,30 @@ class NGOListDonationsViewModel(
                 )
             }
     }
+    
+    fun donations(registeredDonations: List<Success>) = viewModelScope.launch {
+        ngoListDonationsUseCase.listRegisteredDonationsFromServer(registeredDonations)
+            .onCompletion {
+                _ngoListDonationsChannel.sendInViewModelScope(
+                    this@NGOListDonationsViewModel,
+                    BaseEvent.HideLoading
+                )
+            }
+            .collectLatest {
+                _ngoListDonationsChannel.sendInViewModelScope(
+                    this@NGOListDonationsViewModel,
+                    NGOListDonationsEvent.ListOrdersSuccess(it)
+                )
+            }
+    }
 
     private fun handlePayment() = viewModelScope.launch {
         PaymentDispatcher.results
             .collectLatest { data ->
-                when (val result = ngpListDonationsUseCase.handlePaymentList(data)) {
+                when (val result = ngoListDonationsUseCase.handlePaymentList(data)) {
                     is PaymentResult.ListOrdersSuccess -> {
-                        _ngoListDonationsChannel.sendInViewModelScope(
-                            this@NGOListDonationsViewModel,
-                            NGOListDonationsEvent.ListOrdersSuccess(
-                                ListOrdersMapper().generate(result.response)
-                            )
-                        )
-                        _ngoListDonationsChannel.sendInViewModelScope(
-                            this@NGOListDonationsViewModel,
-                            BaseEvent.HideLoading
+                        donations(
+                            ListOrdersMapper().generate(result.response).orders
                         )
                     }
 

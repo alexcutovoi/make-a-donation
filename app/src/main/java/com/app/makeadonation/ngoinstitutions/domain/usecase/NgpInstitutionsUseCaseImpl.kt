@@ -1,9 +1,10 @@
 package com.app.makeadonation.ngoinstitutions.domain.usecase
 
 import android.net.Uri
+import com.app.makeadonation.common.Utils
 import com.app.makeadonation.ngoinstitutions.data.mapper.NGOInstitutionsMapperResponse
 import com.app.makeadonation.ngoinstitutions.data.mapper.NgoinfoMapperRequest
-import com.app.makeadonation.ngoinstitutions.data.model.DonationInfoRequest
+import com.app.makeadonation.ngoinstitutions.data.model.NgoDonationInfoRequest
 import com.app.makeadonation.ngoinstitutions.data.repository.NGOInstitutionsRepository
 import com.app.makeadonation.ngoinstitutions.domain.entity.NgoInfo
 import com.app.makeadonation.payment.domain.entity.PaymentResult
@@ -26,12 +27,24 @@ class NgpInstitutionsUseCaseImpl(
         )
     }
 
-    override suspend fun storeDonation(donationValue: Long, donationId: String, ngoInfo: NgoInfo) = flow {
+    override suspend fun storeDonation(
+        donationValue: Long,
+        donationId: String,
+        donationDate: String,
+        authDonationCode: String,
+        operatorTransactionCode: String,
+        status: String,
+        ngoInfo: NgoInfo
+    ) = flow {
         emit(
             ngoInstitutionsRepository.storeDonation(
-                DonationInfoRequest(
+                NgoDonationInfoRequest(
                     donationValue,
                     donationId,
+                    Utils.formatToRegularDate(donationDate),
+                    authDonationCode,
+                    operatorTransactionCode,
+                    status,
                     NgoinfoMapperRequest().generate(ngoInfo)
                 )
             )

@@ -10,12 +10,11 @@ import com.app.makeadonation.R
 import com.app.makeadonation.common.Utils
 import com.app.makeadonation.databinding.NgoDonationDataBinding
 import com.app.makeadonation.databinding.NgoItemBinding
-import com.app.makeadonation.payment.domain.entity.Payment
-import com.app.makeadonation.payment.domain.entity.Success
+import com.app.makeadonation.ngolistdonations.domain.entity.NgoDonationInfo
 
 class NgoListDonationsAdapter(
-    private val items: List<Success>,
-    private val onClick: (String, Payment) -> Unit
+    private val items: List<NgoDonationInfo>,
+    private val onClick: (String, NgoDonationInfo) -> Unit
 ) : RecyclerView.Adapter<NgoListDonationsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = NgoItemBinding.inflate(
@@ -36,26 +35,27 @@ class NgoListDonationsAdapter(
     inner class ViewHolder(
         private val ngoItemView: View
     ) : RecyclerView.ViewHolder(ngoItemView) {
-        fun bind(item: Success) {
+        fun bind(item: NgoDonationInfo) {
             val binding = NgoItemBinding.bind(ngoItemView)
-            /*val iconId = ngoItemView.context.run {
+            val iconId = ngoItemView.context.run {
                 resources.getIdentifier(
-                    item.imageLink.lowercase(), "drawable", packageName
+                    item.ngoInfo.imageLink.lowercase(), "drawable", packageName
                 )
-            }*/
+            }
             val contentBinding = NgoDonationDataBinding.inflate(
                 LayoutInflater.from(ngoItemView.context), binding.content, true
             )
 
             binding.run {
+                ngoImage.setImageResource(iconId)
                 contentBinding.run {
                     ngoDonationDate.run {
                         ngoDataTitle.text = ngoItemView.context.getString(R.string.donation_date_title)
-                        ngoData.text = item.createdAt
+                        ngoData.text = item.donationDate
                     }
                     ngoDonationValue.run {
                         ngoDataTitle.text = ngoItemView.context.getString(R.string.donated_value_title)
-                        ngoData.text = Utils.formatCurrency(item.price)
+                        ngoData.text = Utils.formatCurrency(item.donatedValue)
                     }
                     ngoDonationStatus.run {
                         ngoDataTitle.text = ngoItemView.context.getString(R.string.donation_status)
@@ -98,9 +98,9 @@ class NgoListDonationsAdapter(
                 }
 
                 donateButton.run {
-                    isEnabled = item.payments.isNotEmpty() && item.isCancelled().not()
+                    isEnabled = item.isCancelled().not()
                     setOnClickListener {
-                        onClick(item.id,  item.payments.first())
+                        onClick(item.donationId,  item)
                     }
                 }
             }

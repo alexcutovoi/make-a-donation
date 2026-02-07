@@ -44,8 +44,8 @@ class NGOListDonationsFragment : BaseFragment<FragmentNgoListDonationsBinding>()
             is NGOListDonationsEvent.ListOrdersSuccess -> {
                 binding.ngoRecyclerView.run {
                     adapter =
-                        NgoListDonationsAdapter(event.listOrders.orders) { id, ngoInfo ->
-                            ngoListDonationsViewModel.cancelOrder(id, ngoInfo)
+                        NgoListDonationsAdapter(event.listDonations) { id, ngoDonationInfo ->
+                            ngoListDonationsViewModel.cancelOrder(id, ngoDonationInfo)
                         }
                     layoutManager = LinearLayoutManager(
                         requireContext(), LinearLayoutManager.VERTICAL, false

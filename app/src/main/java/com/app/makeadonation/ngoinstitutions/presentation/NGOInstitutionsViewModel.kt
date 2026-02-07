@@ -92,6 +92,10 @@ class NGOInstitutionsViewModel(
                             storeDonation(
                                 result.response.price,
                                 result.response.id,
+                                result.response.createdAt,
+                                result.response.paymentsResponse.first().authCode,
+                                result.response.paymentsResponse.first().cieloCode,
+                                result.response.status,
                                 it
                             )
                         }
@@ -118,8 +122,16 @@ class NGOInstitutionsViewModel(
             }
     }
 
-    private suspend fun storeDonation(donationValue: Long, donationId: String, ngoInfo: NgoInfo) = viewModelScope.launch {
-        ngpInstitutionsUseCase.storeDonation(donationValue, donationId, ngoInfo)
+    private suspend fun storeDonation(
+        donationValue: Long,
+        donationId: String,
+        donationDate: String,
+        authDonationCode: String,
+        operatorTransactionCode: String,
+        status: String,
+        ngoInfo: NgoInfo
+    ) = viewModelScope.launch {
+        ngpInstitutionsUseCase.storeDonation(donationValue, donationId, donationDate, authDonationCode, operatorTransactionCode, status, ngoInfo)
             .collectLatest {
                 _ngoInstitutionsChannel.sendInViewModelScope(
                     this@NGOInstitutionsViewModel,

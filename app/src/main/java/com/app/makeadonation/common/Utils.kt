@@ -58,6 +58,21 @@ object Utils {
         return sdf.format(Date())
     }
 
+    fun formatToRegularDate(date: String): String {
+        val inputFormat = SimpleDateFormat(
+            "MMM d, yyyy h:mm:ss a",
+            Locale.ENGLISH
+        )
+
+        val outputFormat = SimpleDateFormat(
+            "dd/MM/yyyy",
+            Locale("pt", "BR")
+        )
+
+        val date = inputFormat.parse(date)
+        return outputFormat.format(date!!)
+    }
+
     fun formatCurrency(value: Long):String {
         val locale = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
 

@@ -1,19 +1,13 @@
-package com.app.makeadonation.payment.domain.entity
+package com.app.makeadonation.ngolistdonations.domain.entity
 
-data class Success(
-    val createdAt: String,
-    val id: String,
-    val items: List<Item>,
-    val notes: String,
-    val number: String,
-    val paidAmount: Int,
-    val payments: List<Payment>,
-    val pendingAmount: Int,
-    val price: Long,
-    val reference: String,
+data class NgoDonationInfo(
+    val donatedValue: Long,
+    val donationId: String,
+    val donationDate: String,
+    val authDonationCode: String,
+    val operatorTransactionCode: String,
     val status: String,
-    val type: String,
-    val updatedAt: String
+    val ngoInfo: NgoInfo
 ) {
     private enum class Statuses(val description: String) {
         PAID("Pago"),

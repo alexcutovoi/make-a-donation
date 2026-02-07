@@ -1,4 +1,4 @@
-package com.app.makeadonation.payment.data.model
+package com.app.makeadonation.payment.domain.entity
 
 data class Error(
     val code: Int,
