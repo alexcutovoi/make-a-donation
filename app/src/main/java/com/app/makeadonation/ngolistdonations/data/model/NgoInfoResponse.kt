@@ -6,6 +6,6 @@ data class NgoInfoResponse(
     @SerializedName("id") val id: String,
     @SerializedName("name") val name: String,
     @SerializedName("info") val info: String,
-    @SerializedName("imagelink") val imageLink: String,
+    @SerializedName("imageLink") val imageLink: String,
     @SerializedName("companyId") val companyId: String,
 )
