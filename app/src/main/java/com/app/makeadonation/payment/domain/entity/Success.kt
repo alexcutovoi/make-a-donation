@@ -14,18 +14,4 @@ data class Success(
     val status: String,
     val type: String,
     val updatedAt: String
-) {
-    private enum class Statuses(val description: String) {
-        PAID("Pago"),
-        ENTERED("Entrado"),
-        CANCELED("Cancelado")
-    }
-
-    fun isCancelled(): Boolean {
-        return status == Statuses.CANCELED.name
-    }
-
-    fun getStatusDescription(): String {
-        return Statuses.entries.first { it.name == status }.description
-    }
-}
+)
