@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.BaseFragment
 import com.app.makeadonation.common.Utils
@@ -62,7 +63,8 @@ class NGOInstitutionsFragment : BaseFragment<FragmentNgoInstitutionsBinding>() {
                     requireActivity(),
                     event.title,
                     event.description,
-                    { ngoInstitutionsViewModel.tryAgain() }
+                    Pair( getString(R.string.ok), { ngoInstitutionsViewModel.tryAgain() }),
+                    Pair( getString(R.string.cancel), { ngoInstitutionsViewModel.tryAgain() })
                 )
             }
             is BaseEvent.ShowLoading -> {

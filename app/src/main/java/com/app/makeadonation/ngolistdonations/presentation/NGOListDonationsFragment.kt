@@ -56,7 +56,12 @@ class NGOListDonationsFragment : BaseFragment<FragmentNgoListDonationsBinding>()
                 Utils.showDialog(requireActivity(), event.title, event.description)
             }
             is NGOListDonationsEvent.PaymentError -> {
-                Utils.showDialog(requireActivity(), event.title, event.description)
+                Utils.showDialog(
+                    requireActivity(),
+                    event.title,
+                    event.description,
+                    Pair( getString(R.string.ok), {})
+                )
             }
             is BaseEvent.ShowLoading -> {
                 binding.run {

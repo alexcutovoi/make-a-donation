@@ -9,7 +9,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
-import org.koin.java.KoinJavaComponent.inject
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Currency
@@ -17,8 +16,6 @@ import java.util.Date
 import java.util.Locale
 
 object Utils {
-    private val textProvider: TextProvider by inject(TextProvider::class.java)
-
     inline fun <reified T> retrieveObjectFromFile(file: String): T {
         val jsonString = MakeADonationApplication.getApplicationContext()
             .assets.open(file).bufferedReader().use { it.readText() }
@@ -85,22 +82,31 @@ object Utils {
         context: Context,
         title: String,
         description: String,
-        action: (() -> Unit)? = null) {
-        MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme)
+        primaryAction: Pair<String, () -> Unit>? = null,
+        secondaryAction: Pair<String, () -> Unit>? = null) {
+        val dialog = MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme)
             .setTitle(title)
             .setMessage(description)
             .setCancelable(false)
-            .setPositiveButton(
-                textProvider.getText(R.string.ok)
+
+        primaryAction?.let {
+            dialog.setPositiveButton(
+                it.first
             ) { dialog, _ ->
-                action?.invoke()
+                it.second.invoke()
                 dialog.dismiss()
             }
-            .setNegativeButton(
-                textProvider.getText(R.string.cancel)
+        }
+
+        secondaryAction?.let {
+            dialog.setNegativeButton(
+                it.first
             ) { dialog, _ ->
+                it.second.invoke()
                 dialog.dismiss()
             }
-            .show()
+        }
+
+        dialog.show()
     }
 }
