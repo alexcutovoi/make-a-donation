@@ -30,7 +30,7 @@
 
                 <data
                     android:host="@string/return_host"
-                    android:scheme="@string/return_schema" />
+                    android:scheme="@string/return_scheme" />
             </intent-filter>
         </activity>
 

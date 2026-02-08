@@ -19,15 +19,17 @@ object PaymentCoordinator {
     private const val PAY_ACTION ="payment"
     private const val PAY_REVERSAL_ACTION = "payment-reversal"
     private const val LIO_SCHEMA = "lio"
+    private const val REQUEST = "request"
     private const val RESPONSE = "response"
     private const val LIST_ORDERS = "orders"
+    private const val URI_CALLBACK = "urlCallback"
     private var returnHost = ""
-    private var returnSchema = ""
+    private var returnScheme = ""
 
     init {
         MakeADonationApplication.getApplicationContext().run {
             returnHost = getString(R.string.return_host)
-            returnSchema = getString(R.string.return_schema)
+            returnScheme = getString(R.string.return_scheme)
         }
     }
 
@@ -159,12 +161,12 @@ object PaymentCoordinator {
             .scheme(LIO_SCHEMA)
             .authority(action)
             .appendQueryParameter(
-                "request",
+                REQUEST,
                 data
             )
             .appendQueryParameter(
-                "urlCallback",
-                "$returnSchema://$returnHost"
+                URI_CALLBACK,
+                "$returnScheme://$returnHost"
             )
             .build()
     }

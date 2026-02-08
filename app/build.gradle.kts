@@ -49,6 +49,11 @@ android {
         viewBinding = true
         buildConfig = true
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -61,9 +66,14 @@ dependencies {
     implementation(libs.androidx.navigation.ui)
     implementation(libs.gson)
     implementation(libs.koin)
+    implementation(libs.koin.test)
     implementation(libs.currency.formatter)
     implementation(libs.koin.core)
+    testImplementation(libs.koin.junit.test)
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.robolectric)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

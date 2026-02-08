@@ -27,12 +27,12 @@ object Utils {
         return Gson().fromJson(data,  object : TypeToken<T>() {}.type)
     }
 
-    fun  <T> transformToJJsom(obj: T): String {
+    fun  <T> transformToJson(obj: T): String {
         return Gson().toJson(obj).toString()
     }
 
     fun <T> encodeToBase64(order: T): String {
-        val data = transformToJJsom(order).toByteArray(Charsets.UTF_8)
+        val data = transformToJson(order).toByteArray(Charsets.UTF_8)
 
         return Base64.encodeToString(data, Base64.DEFAULT)
     }

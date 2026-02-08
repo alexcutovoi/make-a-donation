@@ -2,13 +2,14 @@
     <string name="app_name">Faça uma doação</string>
     <string name="donate">Doar</string>
     <string name="donate_categories_description">Ajude a causa que mais gostaria</string>
+    <string name="donate_categories_empty_list_error">Não foi possível obter a lista de categorias</string>
     <string name="donation_value_title">Valor a doar:</string>
     <string name="donated_value_title">Valor doado:</string>
     <string name="ngo_name">Instituição Ambiental</string>
     <string name="ngo_institutions_title">Instituições</string>
     <string name="ngo_description">Instituição Ambiental é responsável por cuidar de 100 árvores no cerrado e contribui para que o meio ambiente seja preservado</string>
     <string name="return_host">returnhost</string>
-    <string name="return_schema">returnschema</string>
+    <string name="return_scheme">returnscheme</string>
     <string name="thanks_donation">Obrigado pela doação</string>
     <string name="thanks_donation_description">A %1$s agradeçe seu gesto de carinha</string>
     <string name="thanks_donation_title">Valor da doação</string>
@@ -25,5 +26,7 @@
     <string name="warning">Aviso</string>
     <string name="donation_try_again">Erro no pagamento. Deseja tentar novamente?</string>
     <string name="ok">Ok</string>
+    <string name="try_again">Tentar novamente</string>
     <string name="cancel">Cancelar</string>
+    <string name="exit">Sair</string>
 </resources>

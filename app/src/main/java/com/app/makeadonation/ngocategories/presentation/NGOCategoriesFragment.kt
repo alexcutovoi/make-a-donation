@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.BaseFragment
+import com.app.makeadonation.common.Utils
 import com.app.makeadonation.common.observe
 import com.app.makeadonation.databinding.FragmentNgoCategoriesBinding
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -41,6 +42,15 @@ class NGOCategoriesFragment : BaseFragment<FragmentNgoCategoriesBinding>() {
                             )
                         )
                     }
+            }
+            is NGOCategoriesEvent.EmptyCategories -> {
+                Utils.showDialog(
+                    requireContext(), 
+                    event.title, 
+                    event.description,
+                    Pair(getString(R.string.try_again), { ngoCategoriesViewModel.init() }),
+                    Pair(getString(R.string.exit), { requireActivity().finish() } )
+                )
             }
             is BaseEvent.ShowLoading -> {
                 binding.run {

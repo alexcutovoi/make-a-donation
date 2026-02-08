@@ -37,7 +37,7 @@ class NGOInstitutionsRepositoryImpl(
 
                 donations.run {
                     add(donationInfoRequest)
-                    writeString(name, Utils.transformToJJsom(this))
+                    writeString(name, Utils.transformToJson(this))
                 }
             }
         }.getOrThrow()
