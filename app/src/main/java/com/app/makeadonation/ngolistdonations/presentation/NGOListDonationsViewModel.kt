@@ -2,7 +2,6 @@ package com.app.makeadonation.ngolistdonations.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.makeadonation.MakeADonationApplication
 import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
 import com.app.makeadonation.common.TextProvider
