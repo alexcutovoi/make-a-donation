@@ -4,11 +4,8 @@ import android.net.Uri
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import org.json.JSONObject
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.Currency
-import java.util.Date
 import java.util.Locale
 
 object Utils {
@@ -37,5 +34,13 @@ object Utils {
         return data.getQueryParameter(queryParameter)?.let {
             Base64.decode(it, Base64.DEFAULT).decodeToString()
         }
+    }
+
+    fun formatCurrency(value: Long):String {
+        val locale = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+
+        locale.currency = Currency.getInstance("BRL")
+
+        return locale.format(value / 100.0)
     }
 }

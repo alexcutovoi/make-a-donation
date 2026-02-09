@@ -38,7 +38,7 @@ class NGOCategoriesViewModelTest : KoinTest {
 
     private val viewModel: NGOCategoriesViewModel by inject()
 
-    val categories = Utils.retrieveObjectFromFile<List<NgoCategory>>("ong_categories.json")
+    private val categories = Utils.retrieveObjectFromFile<List<NgoCategory>>("ong_categories.json")
 
     @Before
     fun setup() {

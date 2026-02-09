@@ -39,7 +39,12 @@ class NGOListDonationsFragment : BaseFragment<FragmentNgoListDonationsBinding>()
             }
             is NGOListDonationsEvent.CancelledDonation -> {
                 ngoListDonationsViewModel.listDonations()
-                Utils.showDialog(requireActivity(), event.title, event.description)
+                Utils.showDialog(
+                    requireActivity(),
+                    event.title,
+                    event.description,
+                    Pair( getString(R.string.ok), {})
+                )
             }
             is NGOListDonationsEvent.ListOrdersSuccess -> {
                 binding.ngoRecyclerView.run {
@@ -53,7 +58,12 @@ class NGOListDonationsFragment : BaseFragment<FragmentNgoListDonationsBinding>()
                 }
             }
             is NGOListDonationsEvent.PaymentCancelled -> {
-                Utils.showDialog(requireActivity(), event.title, event.description)
+                Utils.showDialog(
+                    requireActivity(),
+                    event.title,
+                    event.description,
+                    Pair( getString(R.string.ok), {})
+                )
             }
             is NGOListDonationsEvent.PaymentError -> {
                 Utils.showDialog(

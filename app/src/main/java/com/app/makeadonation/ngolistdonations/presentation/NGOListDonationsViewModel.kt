@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.makeadonation.MakeADonationApplication
 import com.app.makeadonation.R
 import com.app.makeadonation.common.BaseEvent
+import com.app.makeadonation.common.TextProvider
 import com.app.makeadonation.common.sendInViewModelScope
 import com.app.makeadonation.ngolistdonations.domain.entity.NgoDonationInfo
 import com.app.makeadonation.ngolistdonations.domain.usecase.NgoListDonationsUseCase
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class NGOListDonationsViewModel(
+    private val textProvider: TextProvider,
     private val ngoListDonationsUseCase: NgoListDonationsUseCase
 ) : ViewModel() {
     private val _ngoListDonationsChannel = Channel<BaseEvent>()
@@ -89,16 +91,10 @@ class NGOListDonationsViewModel(
                     is PaymentResult.CancelledOrderSuccess -> {
                         _ngoListDonationsChannel.sendInViewModelScope(
                             this@NGOListDonationsViewModel,
-                            MakeADonationApplication.getApplicationContext().run {
-                                NGOListDonationsEvent.CancelledDonation(
-                                    getString(
-                                        R.string.warning
-                                    ),
-                                    getString(
-                                        R.string.donation_successfully_canceled
-                                    )
-                                )
-                            }
+                            NGOListDonationsEvent.CancelledDonation(
+                                textProvider.getText(R.string.warning),
+                                textProvider.getText(R.string.donation_successfully_canceled)
+                            )
                         )
                     }
 
@@ -106,7 +102,8 @@ class NGOListDonationsViewModel(
                         _ngoListDonationsChannel.sendInViewModelScope(
                             this@NGOListDonationsViewModel,
                             NGOListDonationsEvent.PaymentError(
-                                "Atenção", ErrorResponseMapper().generate(result.response).reason
+                                textProvider.getText(R.string.warning),
+                                ErrorResponseMapper().generate(result.response).reason
                             )
                         )
 
@@ -114,7 +111,8 @@ class NGOListDonationsViewModel(
                         _ngoListDonationsChannel.sendInViewModelScope(
                             this@NGOListDonationsViewModel,
                             NGOListDonationsEvent.PaymentError(
-                                "Atenção", ErrorResponseMapper().generate(result.response).reason
+                                textProvider.getText(R.string.warning),
+                                ErrorResponseMapper().generate(result.response).reason
                             )
                         )
 

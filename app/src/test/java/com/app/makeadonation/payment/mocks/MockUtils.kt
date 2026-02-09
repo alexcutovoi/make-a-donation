@@ -90,16 +90,16 @@ object MockUtils {
     private fun getSuccess() = SuccessResponse(
         createdAt = "Jan 1, 2026 12:00:00 AM", id = "order-1",
         itemsResponse = listOf(getItem()), notes = "", number = "1",
-        paidAmount = 10000, paymentsResponse = listOf(getPayment()),
-        pendingAmount = 0, price = 10000L, reference = "",
+        paidAmount = 1000, paymentsResponse = listOf(getPayment()),
+        pendingAmount = 0, price = 1000L, reference = "",
         status = "PAID", type = "PAYMENT", updatedAt = "Jan 1, 2026 12:00:00 AM"
     )
 
     private fun getCanceled() = SuccessResponse(
         createdAt = "Jan 1, 2026 12:00:00 AM", id = "order-1",
         itemsResponse = listOf(getItem()), notes = "", number = "1",
-        paidAmount = 10000, paymentsResponse = listOf(getPayment()),
-        pendingAmount = 0, price = 10000L, reference = "",
+        paidAmount = 1000, paymentsResponse = listOf(getPayment()),
+        pendingAmount = 0, price = 1000L, reference = "",
         status = "CANCELED", type = "PAYMENT", updatedAt = "Jan 1, 2026 12:00:00 AM"
     )
 }
